@@ -1,15 +1,21 @@
 package com.campus.marketplace.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.campus.marketplace.dto.response.ProductResponse;
 import com.campus.marketplace.entity.Favorite;
 import com.campus.marketplace.entity.Product;
 import com.campus.marketplace.exception.BusinessException;
 import com.campus.marketplace.exception.ErrorCode;
+import com.campus.marketplace.entity.ProductImage;
 import com.campus.marketplace.mapper.FavoriteMapper;
+import com.campus.marketplace.mapper.ProductImageMapper;
 import com.campus.marketplace.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +23,7 @@ public class FavoriteService {
 
     private final FavoriteMapper favoriteMapper;
     private final ProductMapper productMapper;
+    private final ProductImageMapper productImageMapper;
 
     private static final int MAX_FAVORITES = 100;
 
@@ -64,6 +71,29 @@ public class FavoriteService {
                 productMapper.updateById(product);
             }
         }
+    }
+
+    public List<ProductResponse> getUserFavorites(Long userId) {
+        LambdaQueryWrapper<Favorite> w = new LambdaQueryWrapper<>();
+        w.eq(Favorite::getUserId, userId).orderByDesc(Favorite::getCreatedAt);
+        List<Favorite> favorites = favoriteMapper.selectList(w);
+
+        List<ProductResponse> result = new ArrayList<>();
+        for (Favorite f : favorites) {
+            Product product = productMapper.selectById(f.getProductId());
+            if (product == null) continue;
+            ProductResponse r = ProductResponse.fromEntity(product);
+            // 获取封面图
+            LambdaQueryWrapper<ProductImage> iw = new LambdaQueryWrapper<>();
+            iw.eq(ProductImage::getProductId, product.getId())
+              .eq(ProductImage::getIsCover, 1);
+            ProductImage cover = productImageMapper.selectOne(iw);
+            if (cover != null) {
+                r.setCoverImage(cover.getUrl());
+            }
+            result.add(r);
+        }
+        return result;
     }
 
     public boolean isFavorited(Long userId, Long productId) {

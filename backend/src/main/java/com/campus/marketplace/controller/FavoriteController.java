@@ -1,6 +1,7 @@
 package com.campus.marketplace.controller;
 
 import com.campus.marketplace.dto.response.ApiResponse;
+import com.campus.marketplace.dto.response.ProductResponse;
 import com.campus.marketplace.interceptor.AuthInterceptor;
 import com.campus.marketplace.service.FavoriteService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,6 +18,12 @@ import java.util.Map;
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
+
+    @GetMapping
+    public ApiResponse<List<ProductResponse>> list(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        return ApiResponse.success(favoriteService.getUserFavorites(userId));
+    }
 
     @PostMapping("/{productId}")
     public ApiResponse<Void> add(@PathVariable("productId") Long productId, HttpServletRequest request) {
