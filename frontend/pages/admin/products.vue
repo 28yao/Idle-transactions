@@ -40,8 +40,8 @@
           <el-image
             v-for="(img, idx) in currentProduct.images"
             :key="idx"
-            :src="resolveUrl(img.url)"
-            :preview-src-list="currentProduct.images.map(i => resolveUrl(i.url))"
+            :src="resolveUrl(img)"
+            :preview-src-list="currentProduct.images.map(i => resolveUrl(i))"
             :initial-index="idx"
             fit="cover"
             class="preview-img"
