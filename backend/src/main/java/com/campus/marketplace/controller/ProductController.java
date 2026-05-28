@@ -1,7 +1,9 @@
 package com.campus.marketplace.controller;
 
 import com.campus.marketplace.dto.request.ProductCreateRequest;
+import com.campus.marketplace.dto.request.ProductQuery;
 import com.campus.marketplace.dto.response.ApiResponse;
+import com.campus.marketplace.dto.response.PageResponse;
 import com.campus.marketplace.dto.response.ProductResponse;
 import com.campus.marketplace.interceptor.AuthInterceptor;
 import com.campus.marketplace.service.FileService;
@@ -62,5 +64,20 @@ public class ProductController {
     @GetMapping("/{id}")
     public ApiResponse<ProductResponse> detail(@PathVariable("id") Long id) {
         return ApiResponse.success(productService.getProductDetail(id));
+    }
+
+    @GetMapping
+    public ApiResponse<PageResponse<ProductResponse>> list(ProductQuery query) {
+        return ApiResponse.success(productService.listProducts(query));
+    }
+
+    @GetMapping("/recommended")
+    public ApiResponse<List<ProductResponse>> recommended(@RequestParam(value = "limit", defaultValue = "5") Integer limit) {
+        return ApiResponse.success(productService.getRecommended(limit));
+    }
+
+    @GetMapping("/latest")
+    public ApiResponse<List<ProductResponse>> latest(@RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        return ApiResponse.success(productService.getLatest(limit));
     }
 }

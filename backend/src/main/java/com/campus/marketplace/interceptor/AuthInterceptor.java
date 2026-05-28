@@ -24,6 +24,14 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        // 商品的 GET 请求匿名可访问（列表/详情/推荐/最新）
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            String uri = request.getRequestURI();
+            if (uri.startsWith("/api/products")) {
+                return true;
+            }
+        }
+
         String token = extractToken(request);
         if (token == null || !jwtUtil.validateToken(token)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

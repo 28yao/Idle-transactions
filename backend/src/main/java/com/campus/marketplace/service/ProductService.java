@@ -1,7 +1,11 @@
 package com.campus.marketplace.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.marketplace.dto.request.ProductCreateRequest;
+import com.campus.marketplace.dto.request.ProductQuery;
+import com.campus.marketplace.dto.response.PageResponse;
 import com.campus.marketplace.dto.response.ProductResponse;
 import com.campus.marketplace.entity.Product;
 import com.campus.marketplace.entity.ProductImage;
@@ -122,7 +126,72 @@ public class ProductService {
         if (product == null) {
             throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
         }
+        // 浏览量 +1
+        product.setViewCount((product.getViewCount() == null ? 0 : product.getViewCount()) + 1);
+        productMapper.updateById(product);
         return buildResponse(product);
+    }
+
+    public PageResponse<ProductResponse> listProducts(ProductQuery query) {
+        LambdaQueryWrapper<Product> w = new LambdaQueryWrapper<>();
+        // 默认只展示在售 (status=1)
+        w.eq(Product::getStatus, 1);
+
+        if (query.getKeyword() != null && !query.getKeyword().isBlank()) {
+            String kw = query.getKeyword().trim();
+            w.and(q -> q.like(Product::getTitle, kw).or().like(Product::getDescription, kw));
+        }
+        if (query.getCategory() != null && !query.getCategory().isBlank()) {
+            w.eq(Product::getCategory, query.getCategory());
+        }
+        if (query.getCondition() != null && !query.getCondition().isBlank()) {
+            w.eq(Product::getCondition, query.getCondition());
+        }
+        if (query.getCampus() != null && !query.getCampus().isBlank()) {
+            w.eq(Product::getCampus, query.getCampus());
+        }
+        if (query.getMinPrice() != null) {
+            w.ge(Product::getPrice, query.getMinPrice());
+        }
+        if (query.getMaxPrice() != null) {
+            w.le(Product::getPrice, query.getMaxPrice());
+        }
+
+        String sort = query.getSort() == null ? "latest" : query.getSort();
+        switch (sort) {
+            case "price_asc" -> w.orderByAsc(Product::getPrice);
+            case "price_desc" -> w.orderByDesc(Product::getPrice);
+            case "popular" -> w.orderByDesc(Product::getViewCount);
+            default -> w.orderByDesc(Product::getCreatedAt);
+        }
+
+        int page = query.getPage() == null || query.getPage() < 1 ? 1 : query.getPage();
+        int size = query.getSize() == null || query.getSize() < 1 ? 20 : Math.min(query.getSize(), 100);
+        IPage<Product> result = productMapper.selectPage(new Page<>(page, size), w);
+
+        List<ProductResponse> items = new ArrayList<>();
+        for (Product p : result.getRecords()) {
+            items.add(buildResponse(p));
+        }
+        return PageResponse.of(items, result.getTotal(), size, page);
+    }
+
+    public List<ProductResponse> getRecommended(int limit) {
+        LambdaQueryWrapper<Product> w = new LambdaQueryWrapper<>();
+        w.eq(Product::getStatus, 1).orderByDesc(Product::getViewCount).orderByDesc(Product::getCreatedAt).last("LIMIT " + Math.min(limit, 20));
+        List<Product> list = productMapper.selectList(w);
+        List<ProductResponse> result = new ArrayList<>();
+        for (Product p : list) result.add(buildResponse(p));
+        return result;
+    }
+
+    public List<ProductResponse> getLatest(int limit) {
+        LambdaQueryWrapper<Product> w = new LambdaQueryWrapper<>();
+        w.eq(Product::getStatus, 1).orderByDesc(Product::getCreatedAt).last("LIMIT " + Math.min(limit, 20));
+        List<Product> list = productMapper.selectList(w);
+        List<ProductResponse> result = new ArrayList<>();
+        for (Product p : list) result.add(buildResponse(p));
+        return result;
     }
 
     private void validateImages(List<String> images) {

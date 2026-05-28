@@ -23,7 +23,7 @@
         :key="cat.value"
         class="category-tag"
         :class="{ active: activeCategory === cat.value }"
-        @click="activeCategory = cat.value"
+        @click="selectCategory(cat.value)"
       >
         {{ cat.label }}
       </div>
@@ -33,38 +33,29 @@
     <section class="product-section">
       <div class="section-header">
         <h2 class="section-title">推荐商品</h2>
-        <NuxtLink to="/products?type=recommended" class="more-link">查看更多 →</NuxtLink>
+        <NuxtLink to="/products?sort=popular" class="more-link">查看更多 →</NuxtLink>
       </div>
-      <div class="product-grid">
-        <div v-for="item in recommendedProducts" :key="item.id" class="product-card">
-          <div class="product-image"></div>
-          <div class="product-info">
-            <div class="product-title">{{ item.title }}</div>
-            <div class="product-price">¥{{ item.price }}</div>
-            <div class="product-meta">
-              <span>{{ item.campus }}</span>
-              <span>· {{ item.condition }}</span>
-            </div>
-          </div>
-        </div>
+      <div v-if="loadingRecommended" class="loading-grid">
+        <div v-for="i in 5" :key="i" class="skeleton-card"></div>
+      </div>
+      <div v-else-if="recommendedProducts.length === 0" class="empty">暂无推荐商品</div>
+      <div v-else class="product-grid">
+        <ProductCard v-for="p in recommendedProducts" :key="p.id" :product="p" />
       </div>
     </section>
 
     <!-- 最新发布 -->
     <section class="product-section">
-      <h2 class="section-title">最新发布</h2>
-      <div class="product-grid">
-        <div v-for="item in latestProducts" :key="item.id" class="product-card">
-          <div class="product-image"></div>
-          <div class="product-info">
-            <div class="product-title">{{ item.title }}</div>
-            <div class="product-price">¥{{ item.price }}</div>
-            <div class="product-meta">
-              <span>{{ item.campus }}</span>
-              <span>· {{ item.condition }}</span>
-            </div>
-          </div>
-        </div>
+      <div class="section-header">
+        <h2 class="section-title">最新发布</h2>
+        <NuxtLink to="/products" class="more-link">查看更多 →</NuxtLink>
+      </div>
+      <div v-if="loadingLatest" class="loading-grid">
+        <div v-for="i in 5" :key="i" class="skeleton-card"></div>
+      </div>
+      <div v-else-if="latestProducts.length === 0" class="empty">暂无商品，<NuxtLink to="/product/publish">发布第一件</NuxtLink></div>
+      <div v-else class="product-grid">
+        <ProductCard v-for="p in latestProducts" :key="p.id" :product="p" />
       </div>
     </section>
   </div>
@@ -72,39 +63,75 @@
 
 <script setup>
 import { Search } from '@element-plus/icons-vue'
+import ProductCard from '~/components/product/ProductCard.vue'
 
 const searchQuery = ref('')
-const activeCategory = ref('books')
+const activeCategory = ref('')
 
 const categories = [
-  { label: '书籍教材', value: 'books' },
-  { label: '电子数码', value: 'electronics' },
-  { label: '生活用品', value: 'daily' },
-  { label: '服饰美妆', value: 'clothing' },
-  { label: '全部', value: 'all' },
+  { label: '全部', value: '' },
+  { label: '书籍教材', value: '书籍教材' },
+  { label: '电子数码', value: '电子数码' },
+  { label: '生活用品', value: '生活用品' },
+  { label: '服饰美妆', value: '服饰美妆' },
 ]
 
-const recommendedProducts = [
-  { id: 1, title: '高等数学教材 第7版', price: 25, campus: '东校区', condition: '9成新' },
-  { id: 2, title: 'iPad 2024款 64G', price: 2800, campus: '西校区', condition: '95新' },
-  { id: 3, title: '宿舍台灯 LED', price: 35, campus: '南校区', condition: '8成新' },
-  { id: 4, title: 'Nike运动鞋 42码', price: 280, campus: '北校区', condition: '9成新' },
-  { id: 5, title: '蓝牙耳机 AirPods', price: 680, campus: '东校区', condition: '95新' },
-]
+const recommendedProducts = ref([])
+const latestProducts = ref([])
+const loadingRecommended = ref(true)
+const loadingLatest = ref(true)
 
-const latestProducts = [
-  { id: 6, title: '数据结构教材', price: 18, campus: '东校区', condition: '8成新' },
-  { id: 7, title: '机械键盘 青轴', price: 220, campus: '西校区', condition: '9成新' },
-  { id: 8, title: '收纳箱 大号', price: 25, campus: '南校区', condition: '9成新' },
-  { id: 9, title: '冬季羽绒服 M', price: 150, campus: '北校区', condition: '9成新' },
-  { id: 10, title: '考研英语词汇', price: 22, campus: '东校区', condition: '95新' },
-]
+const { $api } = useNuxtApp()
+
+const loadRecommended = async () => {
+  loadingRecommended.value = true
+  try {
+    const res = await $api.get('/api/products/recommended', { params: { limit: 5 } })
+    recommendedProducts.value = res.data || []
+  } catch (e) {
+    recommendedProducts.value = []
+  } finally {
+    loadingRecommended.value = false
+  }
+}
+
+const loadLatest = async () => {
+  loadingLatest.value = true
+  try {
+    const params = { limit: 10 }
+    if (activeCategory.value) params.category = activeCategory.value
+    // 分类筛选时走列表接口
+    if (activeCategory.value) {
+      const res = await $api.get('/api/products', {
+        params: { category: activeCategory.value, size: 10, page: 1 },
+      })
+      latestProducts.value = res.data?.records || []
+    } else {
+      const res = await $api.get('/api/products/latest', { params: { limit: 10 } })
+      latestProducts.value = res.data || []
+    }
+  } catch (e) {
+    latestProducts.value = []
+  } finally {
+    loadingLatest.value = false
+  }
+}
+
+const selectCategory = (cat) => {
+  activeCategory.value = cat
+  loadLatest()
+}
 
 const handleSearch = () => {
   if (searchQuery.value.trim()) {
-    navigateTo(`/search?q=${encodeURIComponent(searchQuery.value)}`)
+    navigateTo(`/products?keyword=${encodeURIComponent(searchQuery.value.trim())}`)
   }
 }
+
+onMounted(() => {
+  loadRecommended()
+  loadLatest()
+})
 </script>
 
 <style scoped>
@@ -206,10 +233,6 @@ const handleSearch = () => {
   font-size: 18px;
   font-weight: 600;
   color: #303133;
-  margin: 0 0 16px 0;
-}
-
-.section-header .section-title {
   margin: 0;
 }
 
@@ -219,57 +242,35 @@ const handleSearch = () => {
   text-decoration: none;
 }
 
-.product-grid {
+.product-grid,
+.loading-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
 }
 
-.product-card {
-  background-color: #fff;
-  border: 1px solid #e4e7ed;
+.skeleton-card {
+  background-color: #f5f7fa;
   border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s;
+  aspect-ratio: 1 / 1.4;
+  animation: skeleton 1.5s ease-in-out infinite;
 }
 
-.product-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+@keyframes skeleton {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
-.product-image {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: linear-gradient(135deg, #e4e7ed 0%, #c8cdd6 100%);
-}
-
-.product-info {
-  padding: 12px;
-}
-
-.product-title {
-  font-size: 13px;
-  color: #303133;
-  font-weight: 500;
-  margin-bottom: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.product-price {
-  font-size: 16px;
-  color: #f56c6c;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.product-meta {
-  font-size: 12px;
+.empty {
+  text-align: center;
+  font-size: 14px;
   color: #909399;
-  display: flex;
-  gap: 4px;
+  padding: 60px 0;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.empty a {
+  color: #409eff;
 }
 </style>
