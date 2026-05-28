@@ -9,6 +9,7 @@
         <nav class="nav-links">
           <NuxtLink to="/" class="nav-item" :class="{ active: route.path === '/' }">首页</NuxtLink>
           <NuxtLink to="/chat" class="nav-item" :class="{ active: route.path.startsWith('/chat') }">消息</NuxtLink>
+          <NuxtLink to="/user/transactions" class="nav-item" :class="{ active: route.path.startsWith('/user/transactions') }">交易</NuxtLink>
           <NuxtLink to="/user/listings" class="nav-item" :class="{ active: route.path.startsWith('/user/listings') }">我的发布</NuxtLink>
           <NuxtLink to="/user/favorites" class="nav-item" :class="{ active: route.path.startsWith('/user/favorites') }">收藏</NuxtLink>
         </nav>
@@ -22,6 +23,7 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="navigateTo('/user/profile')">个人主页</el-dropdown-item>
+                  <el-dropdown-item @click="navigateTo('/user/transactions')">交易记录</el-dropdown-item>
                   <el-dropdown-item @click="navigateTo('/user/listings')">我的发布</el-dropdown-item>
                   <el-dropdown-item @click="navigateTo('/user/favorites')">我的收藏</el-dropdown-item>
                   <el-dropdown-item @click="navigateTo('/notifications')">通知中心</el-dropdown-item>

@@ -168,7 +168,7 @@ const fetchTransactions = async () => {
       params.status = parseInt(activeTab.value)
     }
     const res = await $api.get('/api/transactions', { params })
-    transactions.value = res.data?.items || []
+    transactions.value = res.data?.records || []
     total.value = res.data?.total || 0
   } catch (e) {
     transactions.value = []
