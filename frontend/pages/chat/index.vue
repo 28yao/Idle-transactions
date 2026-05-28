@@ -83,10 +83,18 @@ const sendMessage = async (content, type = 1, priceOffer = null) => {
 
 const handleOffer = async (messageId, action) => {
   try {
+    // 乐观更新：立即修改本地消息状态
+    if (chatWindowRef.value) {
+      chatWindowRef.value.updateMessage({ id: messageId, offerStatus: action })
+    }
     await $api.post(`/api/messages/${messageId}/offer`, { action })
     ElMessage.success(action === 1 ? '已接受' : '已拒绝')
     await fetchConversations()
   } catch (e) {
+    // 失败时回滚：重新加载消息
+    if (chatWindowRef.value) {
+      chatWindowRef.value.fetchMessages()
+    }
     ElMessage.error(e.message || '操作失败')
   }
 }

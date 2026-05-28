@@ -234,7 +234,7 @@ const updateMessage = (msg) => {
 }
 
 // 暴露方法给父组件
-defineExpose({ addMessage, updateMessage })
+defineExpose({ addMessage, updateMessage, fetchMessages })
 
 watch(() => props.conversationId, fetchMessages)
 
