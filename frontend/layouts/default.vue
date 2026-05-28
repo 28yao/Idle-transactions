@@ -8,7 +8,7 @@
         </NuxtLink>
         <nav class="nav-links">
           <NuxtLink to="/" class="nav-item" :class="{ active: route.path === '/' }">首页</NuxtLink>
-          <NuxtLink to="/messages" class="nav-item" :class="{ active: route.path.startsWith('/messages') }">消息</NuxtLink>
+          <NuxtLink to="/chat" class="nav-item" :class="{ active: route.path.startsWith('/chat') }">消息</NuxtLink>
           <NuxtLink to="/user/listings" class="nav-item" :class="{ active: route.path.startsWith('/user/listings') }">我的发布</NuxtLink>
           <NuxtLink to="/user/favorites" class="nav-item" :class="{ active: route.path.startsWith('/user/favorites') }">收藏</NuxtLink>
         </nav>
