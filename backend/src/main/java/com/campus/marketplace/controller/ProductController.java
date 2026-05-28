@@ -73,6 +73,33 @@ public class ProductController {
         return ApiResponse.success(productService.listProducts(query));
     }
 
+    @PutMapping("/{id}/status")
+    public ApiResponse<Void> updateStatus(@PathVariable("id") Long id,
+                                          @RequestBody Map<String, Integer> body,
+                                          HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        productService.updateProductStatus(id, userId, body.get("status"));
+        return ApiResponse.success(null);
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> delete(@PathVariable("id") Long id,
+                                    HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        productService.deleteProduct(id, userId);
+        return ApiResponse.success(null);
+    }
+
+    @GetMapping("/user")
+    public ApiResponse<PageResponse<ProductResponse>> userList(
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        return ApiResponse.success(productService.listUserProducts(userId, status, page, size));
+    }
+
     @GetMapping("/recommended")
     public ApiResponse<List<ProductResponse>> recommended(@RequestParam(value = "limit", defaultValue = "5") Integer limit) {
         return ApiResponse.success(productService.getRecommended(limit));

@@ -34,6 +34,7 @@
           <el-button v-if="p.status === 1" size="small" @click="updateStatus(p.id, 3)">下架</el-button>
           <el-button v-if="p.status === 3" size="small" type="success" @click="updateStatus(p.id, 1)">上架</el-button>
           <el-button v-if="p.status === 1" size="small" type="warning" @click="updateStatus(p.id, 2)">已售</el-button>
+          <el-button v-if="p.status !== 2" size="small" type="danger" @click="deleteProduct(p.id)">删除</el-button>
         </div>
       </div>
     </div>
@@ -51,7 +52,7 @@ const products = ref([])
 
 const fetchProducts = async () => {
   try {
-    const res = await $api.get('/api/products', { params: { status: activeTab.value, size: 50 } })
+    const res = await $api.get('/api/products/user', { params: { status: activeTab.value, size: 50 } })
     products.value = res.data?.records || []
   } catch (e) {
     products.value = []
@@ -64,6 +65,17 @@ const updateStatus = async (id, status) => {
     await ElMessageBox.confirm(`确定要${label}吗？`, '提示')
     await $api.put(`/api/products/${id}/status`, { status })
     ElMessage.success(`${label}成功`)
+    fetchProducts()
+  } catch (e) {
+    if (e !== 'cancel') ElMessage.error(e.message || '操作失败')
+  }
+}
+
+const deleteProduct = async (id) => {
+  try {
+    await ElMessageBox.confirm('确定要删除该商品吗？此操作不可恢复', '警告', { type: 'warning' })
+    await $api.delete(`/api/products/${id}`)
+    ElMessage.success('删除成功')
     fetchProducts()
   } catch (e) {
     if (e !== 'cancel') ElMessage.error(e.message || '操作失败')

@@ -198,6 +198,68 @@ public class ProductService {
         return result;
     }
 
+    @Transactional
+    public void updateProductStatus(Long productId, Long sellerId, Integer newStatus) {
+        Product product = productMapper.selectById(productId);
+        if (product == null) {
+            throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        if (!product.getSellerId().equals(sellerId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+        Integer current = product.getStatus();
+
+        // 已售/违规下架不允许改状态
+        if (current != null && (current == 2 || current == 5)) {
+            throw new BusinessException(ErrorCode.PRODUCT_STATUS_ERROR.getCode(), "当前状态不允许修改");
+        }
+        // 已售商品不能下架
+        if (current != null && current == 2 && newStatus == 3) {
+            throw new BusinessException(ErrorCode.PRODUCT_STATUS_ERROR.getCode(), "已售商品不能下架");
+        }
+
+        product.setStatus(newStatus);
+        productMapper.updateById(product);
+    }
+
+    @Transactional
+    public void deleteProduct(Long productId, Long sellerId) {
+        Product product = productMapper.selectById(productId);
+        if (product == null) {
+            throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        if (!product.getSellerId().equals(sellerId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+        // 已售商品不能删除（有交易记录）
+        if (product.getStatus() != null && product.getStatus() == 2) {
+            throw new BusinessException(ErrorCode.PRODUCT_STATUS_ERROR.getCode(), "已售商品不能删除");
+        }
+
+        // 删除图片
+        LambdaQueryWrapper<ProductImage> iw = new LambdaQueryWrapper<>();
+        iw.eq(ProductImage::getProductId, productId);
+        productImageMapper.delete(iw);
+
+        productMapper.deleteById(productId);
+    }
+
+    public PageResponse<ProductResponse> listUserProducts(Long sellerId, Integer status, int page, int size) {
+        LambdaQueryWrapper<Product> w = new LambdaQueryWrapper<>();
+        w.eq(Product::getSellerId, sellerId);
+        if (status != null) {
+            w.eq(Product::getStatus, status);
+        }
+        w.orderByDesc(Product::getCreatedAt);
+
+        IPage<Product> result = productMapper.selectPage(new Page<>(page, size), w);
+        List<ProductResponse> items = new ArrayList<>();
+        for (Product p : result.getRecords()) {
+            items.add(buildResponse(p));
+        }
+        return PageResponse.of(items, result.getTotal(), size, page);
+    }
+
     private void validateImages(List<String> images) {
         if (images != null && images.size() > MAX_IMAGES) {
             throw new BusinessException(ErrorCode.PRODUCT_IMAGES_LIMIT);
