@@ -48,16 +48,16 @@ public class TransactionService {
             throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
         }
         if (product.getStatus() == null || product.getStatus() != PRODUCT_ON_SALE) {
-            throw new BusinessException(ErrorCode.PRODUCT_STATUS_ERROR.getCode(), "商品已售出");
+            throw new BusinessException(ErrorCode.PRODUCT_STATUS_ERROR.getCode(), "商品已售出或不可购买");
         }
         if (product.getSellerId().equals(buyerId)) {
             throw new BusinessException(ErrorCode.BAD_REQUEST.getCode(), "不能购买自己的商品");
         }
 
-        // 检查是否已有进行中的交易
+        // 检查是否已有进行中或待确认取消的交易
         LambdaQueryWrapper<Transaction> checkWrapper = new LambdaQueryWrapper<>();
         checkWrapper.eq(Transaction::getProductId, productId)
-                .in(Transaction::getStatus, STATUS_ONGOING, STATUS_DELIVERED);
+                .in(Transaction::getStatus, STATUS_ONGOING, STATUS_DELIVERED, STATUS_PENDING_CANCEL);
         Long existCount = transactionMapper.selectCount(checkWrapper);
         if (existCount > 0) {
             throw new BusinessException(ErrorCode.TRANSACTION_STATUS_ERROR.getCode(), "该商品已有进行中的交易");
