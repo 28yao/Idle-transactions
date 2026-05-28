@@ -126,6 +126,7 @@ const sendText = () => {
   messages.value.push({
     id: Date.now(),
     senderId: currentUserId.value,
+    senderNickname: '我',
     content: text,
     type: 1,
     createdAt: new Date().toISOString(),
@@ -141,6 +142,7 @@ const sendOffer = () => {
   messages.value.push({
     id: Date.now(),
     senderId: currentUserId.value,
+    senderNickname: '我',
     content: msg,
     type: 3,
     priceOffer: offerPrice.value,
