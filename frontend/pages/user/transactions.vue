@@ -143,6 +143,17 @@ const { $api } = useNuxtApp()
 const token = useCookie('token')
 const authStore = useAuthStore()
 
+// 从 token 获取当前用户 ID（同步）
+const currentUserId = computed(() => {
+  if (!token.value) return null
+  try {
+    const payload = JSON.parse(atob(token.value.split('.')[1]))
+    return Number(payload.sub)
+  } catch {
+    return null
+  }
+})
+
 const activeTab = ref('all')
 const transactions = ref([])
 const loading = ref(false)
@@ -182,8 +193,8 @@ const handleTabChange = () => {
   fetchTransactions()
 }
 
-const isBuyer = (t) => authStore.user?.id === t.buyerId
-const isSeller = (t) => authStore.user?.id === t.sellerId
+const isBuyer = (t) => currentUserId.value && currentUserId.value === t.buyerId
+const isSeller = (t) => currentUserId.value && currentUserId.value === t.sellerId
 
 const getStatusLabel = (status) => TransactionStatusLabel[status] || '未知'
 const getStatusType = (status) => TransactionStatusType[status] || 'info'
