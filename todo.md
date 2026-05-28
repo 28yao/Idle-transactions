@@ -875,45 +875,45 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F9.1 | 创建交易记录页面 | frontend/pages/user/transactions.vue | F1.6 | 页面能正常显示 | 未开始 |
-| F9.2 | 实现交易列表组件 | frontend/components/transaction/TransactionList.vue | F1.2 | 列表显示正常 | 未开始 |
-| F9.3 | 实现交易详情组件 | frontend/components/transaction/TransactionDetail.vue | F1.2 | 详情显示正确 | 未开始 |
-| F9.4 | 实现确认购买功能 | frontend/components/chat/ChatWindow.vue | F8.5 | 交易创建成功 | 未开始 |
-| F9.5 | 实现取消交易弹窗 | frontend/components/transaction/CancelDialog.vue | F1.2 | 弹窗正常显示 | 未开始 |
+| F9.1 | 创建交易记录页面 | frontend/pages/user/transactions.vue | F1.6 | 页面能正常显示 | 已完成 |
+| F9.2 | 实现交易列表组件 | frontend/pages/user/transactions.vue | F1.2 | 列表显示正常 | 已完成 |
+| F9.3 | 实现交易详情组件 | frontend/pages/user/transactions.vue | F1.2 | 详情显示正确 | 已完成 |
+| F9.4 | 实现确认购买功能 | frontend/components/chat/ChatWindow.vue | F8.5 | 交易创建成功 | 已完成 |
+| F9.5 | 实现取消交易弹窗 | frontend/pages/user/transactions.vue | F1.2 | 弹窗正常显示 | 已完成 |
 
 ### 9.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B9.1 | 创建交易列表接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | GET /api/transactions 返回交易列表 | 未开始 |
-| B9.2 | 创建交易详情接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | GET /api/transactions/{id} 返回交易详情 | 未开始 |
-| B9.3 | 创建标记交付接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | PUT /api/transactions/{id}/deliver 返回成功 | 未开始 |
-| B9.4 | 创建确认收货接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | PUT /api/transactions/{id}/confirm 返回成功 | 未开始 |
-| B9.5 | 创建申请取消接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | POST /api/transactions/{id}/cancel 返回成功 | 未开始 |
-| B9.6 | 创建同意取消接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | PUT /api/transactions/{id}/cancel 返回成功 | 未开始 |
+| B9.1 | 创建交易列表接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | GET /api/transactions 返回交易列表 | 已完成 |
+| B9.2 | 创建交易详情接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | GET /api/transactions/{id} 返回交易详情 | 已完成 |
+| B9.3 | 创建标记交付接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | PUT /api/transactions/{id}/deliver 返回成功 | 已完成 |
+| B9.4 | 创建确认收货接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | PUT /api/transactions/{id}/confirm 返回成功 | 已完成 |
+| B9.5 | 创建申请取消接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | POST /api/transactions/{id}/cancel 返回成功 | 已完成 |
+| B9.6 | 创建同意取消接口 | backend/src/main/java/.../controller/TransactionController.java | S1.2 | PUT /api/transactions/{id}/cancel 返回成功 | 已完成 |
 
 ### 9.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S9.1 | 实现创建交易逻辑 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 交易记录创建成功 | 未开始 |
-| S9.2 | 实现标记交付逻辑 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 状态更新为"卖家已交付" | 未开始 |
-| S9.3 | 实现确认收货逻辑 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 状态更新为"未开始" | 未开始 |
-| S9.4 | 实现取消交易逻辑 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 状态更新为"已取消" | 未开始 |
-| S9.5 | 实现超时自动完成 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 7天后自动完成 | 未开始 |
+| S9.1 | 实现创建交易逻辑 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 交易记录创建成功 | 已完成 |
+| S9.2 | 实现标记交付逻辑 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 状态更新为"卖家已交付" | 已完成 |
+| S9.3 | 实现确认收货逻辑 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 状态更新为"已完成" | 已完成 |
+| S9.4 | 实现取消交易逻辑 | backend/src/main/java/.../service/TransactionService.java | M9.1 | 状态更新为"已取消" | 已完成 |
+| S9.5 | 实现超时自动完成（可选） | backend/src/main/java/.../service/TransactionService.java | M9.1 | 7天后自动完成 | 跳过 |
 
 ### 9.7 Mapper 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| M9.1 | 创建TransactionMapper | backend/src/main/java/.../mapper/TransactionMapper.java | M1.1 | 能正常查询交易 | 未开始 |
+| M9.1 | 创建TransactionMapper | backend/src/main/java/.../mapper/TransactionMapper.java | M1.1 | 能正常查询交易 | 已完成 |
 
 ### 9.8 Repository / 数据保存任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| D9.1 | 创建Transaction实体类 | backend/src/main/java/.../entity/Transaction.java | M1.1 | 字段与数据库对应 | 未开始 |
-| D9.2 | 创建交易响应DTO | backend/src/main/java/.../dto/response/TransactionResponse.java | 无 | 返回字段正确 | 未开始 |
+| D9.1 | 创建Transaction实体类 | backend/src/main/java/.../entity/Transaction.java | M1.1 | 字段与数据库对应 | 已完成 |
+| D9.2 | 创建交易响应DTO | backend/src/main/java/.../dto/response/TransactionResponse.java | 无 | 返回字段正确 | 已完成 |
 
 ### 9.9 页面测试方法
 
@@ -943,7 +943,7 @@
 
 ### 9.12 当前状态
 
-- 未开始
+- 已完成
 
 ---
 

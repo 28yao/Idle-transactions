@@ -8,11 +8,21 @@
         </el-avatar>
         <span class="header-name">{{ conversation?.otherNickname }}</span>
       </div>
-      <div v-if="conversation?.productTitle" class="header-product" @click="goProduct">
-        <span class="product-title">{{ conversation.productTitle }}</span>
-        <span v-if="conversation.productPrice" class="product-price">
-          ¥{{ conversation.productPrice }}
-        </span>
+      <div v-if="conversation?.productTitle" class="header-product">
+        <div class="product-clickable" @click="goProduct">
+          <span class="product-title">{{ conversation.productTitle }}</span>
+          <span v-if="conversation.productPrice" class="product-price">
+            ¥{{ conversation.productPrice }}
+          </span>
+        </div>
+        <el-button
+          v-if="conversation?.productId && !isSeller"
+          type="success"
+          size="small"
+          @click.stop="confirmPurchase"
+        >
+          确认购买
+        </el-button>
       </div>
     </div>
 
@@ -49,6 +59,7 @@
 
 <script setup>
 import { Loading } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import MessageBubble from './MessageBubble.vue'
 
 const props = defineProps({
@@ -60,6 +71,11 @@ const emit = defineEmits(['send'])
 
 const { $api } = useNuxtApp()
 const router = useRouter()
+const authStore = useAuthStore()
+
+const isSeller = computed(() => {
+  return authStore.user?.id === conversation?.value?.sellerId
+})
 
 const messages = ref([])
 const loading = ref(false)
@@ -112,6 +128,17 @@ const sendText = () => {
 const goProduct = () => {
   if (props.conversation?.productId) {
     router.push(`/product/${props.conversation.productId}`)
+  }
+}
+
+const confirmPurchase = async () => {
+  try {
+    await ElMessageBox.confirm('确认购买此商品？将创建交易记录。', '确认购买')
+    const res = await $api.post(`/api/transactions?productId=${props.conversation.productId}`)
+    ElMessage.success('交易已创建，请等待卖家交付')
+    router.push('/user/transactions')
+  } catch (e) {
+    if (e !== 'cancel') ElMessage.error(e.message || '操作失败')
   }
 }
 
@@ -173,12 +200,18 @@ onMounted(fetchMessages)
   padding: 4px 12px;
   background: #f5f7fa;
   border-radius: 4px;
-  cursor: pointer;
   font-size: 13px;
 }
 
-.header-product:hover {
-  background: #ecf5ff;
+.product-clickable {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.product-clickable:hover {
+  opacity: 0.8;
 }
 
 .product-title {
