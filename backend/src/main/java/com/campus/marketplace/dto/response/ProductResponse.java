@@ -32,6 +32,8 @@ public class ProductResponse {
     private List<String> images;
     private String coverImage;
 
+    private Boolean favorited;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

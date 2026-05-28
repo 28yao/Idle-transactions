@@ -29,6 +29,7 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final ProductImageMapper productImageMapper;
     private final UserMapper userMapper;
+    private final FavoriteService favoriteService;
 
     private static final int MAX_PUBLISHED = 20;
     private static final int MAX_IMAGES = 9;
@@ -121,7 +122,7 @@ public class ProductService {
         return buildResponse(product);
     }
 
-    public ProductResponse getProductDetail(Long productId) {
+    public ProductResponse getProductDetail(Long productId, Long userId) {
         Product product = productMapper.selectById(productId);
         if (product == null) {
             throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
@@ -129,7 +130,10 @@ public class ProductService {
         // 浏览量 +1
         product.setViewCount((product.getViewCount() == null ? 0 : product.getViewCount()) + 1);
         productMapper.updateById(product);
-        return buildResponse(product);
+
+        ProductResponse r = buildResponse(product);
+        r.setFavorited(favoriteService.isFavorited(userId, productId));
+        return r;
     }
 
     public PageResponse<ProductResponse> listProducts(ProductQuery query) {

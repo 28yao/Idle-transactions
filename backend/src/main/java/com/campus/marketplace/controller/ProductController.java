@@ -62,8 +62,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ProductResponse> detail(@PathVariable("id") Long id) {
-        return ApiResponse.success(productService.getProductDetail(id));
+    public ApiResponse<ProductResponse> detail(@PathVariable("id") Long id,
+                                                HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        return ApiResponse.success(productService.getProductDetail(id, userId));
     }
 
     @GetMapping
