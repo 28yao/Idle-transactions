@@ -24,10 +24,10 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 商品的 GET 请求匿名可访问（列表/详情/推荐/最新）
+        // 商品的公开 GET 请求匿名可访问（列表/详情/推荐/最新）
         if ("GET".equalsIgnoreCase(request.getMethod())) {
             String uri = request.getRequestURI();
-            if (uri.startsWith("/api/products")) {
+            if (uri.equals("/api/products") || uri.startsWith("/api/products/recommended") || uri.startsWith("/api/products/latest") || uri.matches("/api/products/\\d+")) {
                 return true;
             }
         }
