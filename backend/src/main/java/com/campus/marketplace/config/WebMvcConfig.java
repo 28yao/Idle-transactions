@@ -1,5 +1,6 @@
 package com.campus.marketplace.config;
 
+import com.campus.marketplace.interceptor.AdminInterceptor;
 import com.campus.marketplace.interceptor.AuthInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
+    private final AdminInterceptor adminInterceptor;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -38,6 +40,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/swagger-resources/**",
                         "/webjars/**"
                 );
+
+        registry.addInterceptor(adminInterceptor)
+                .addPathPatterns("/api/admin/**");
     }
 
     @Override
