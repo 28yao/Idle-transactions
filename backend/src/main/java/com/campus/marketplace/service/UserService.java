@@ -60,13 +60,13 @@ public class UserService {
         // 发布数量
         LambdaQueryWrapper<Product> pw = new LambdaQueryWrapper<>();
         pw.eq(Product::getSellerId, userId);
-        r.setPublishCount((int) productMapper.selectCount(pw));
+        r.setPublishCount(productMapper.selectCount(pw).intValue());
 
         // 成交数量（状态=已完成）
         LambdaQueryWrapper<Transaction> tw = new LambdaQueryWrapper<>();
         tw.and(q -> q.eq(Transaction::getBuyerId, userId).or().eq(Transaction::getSellerId, userId));
         tw.eq(Transaction::getStatus, 2); // COMPLETED
-        r.setTransactionCount((int) transactionMapper.selectCount(tw));
+        r.setTransactionCount(transactionMapper.selectCount(tw).intValue());
 
         // 最近评价
         LambdaQueryWrapper<Review> rw = new LambdaQueryWrapper<>();
