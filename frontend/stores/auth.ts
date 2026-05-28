@@ -60,8 +60,11 @@ export const useAuthStore = defineStore('auth', {
       try {
         const res = await $api.get('/api/auth/me')
         this.setUser(res.data)
-      } catch {
-        this.logout()
+      } catch (e: any) {
+        // 只有 401 才登出，其他错误保留 token
+        if (e?.code === 401 || e?.status === 401) {
+          this.logout()
+        }
       }
     },
 
