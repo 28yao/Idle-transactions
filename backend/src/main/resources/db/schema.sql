@@ -74,6 +74,8 @@ CREATE TABLE IF NOT EXISTS conversations (
     product_id BIGINT NOT NULL COMMENT '关联商品',
     last_message VARCHAR(255) DEFAULT NULL COMMENT '最新消息预览',
     last_message_at DATETIME DEFAULT NULL COMMENT '最新消息时间',
+    unread_count1 INT DEFAULT 0 COMMENT '用户1未读数',
+    unread_count2 INT DEFAULT 0 COMMENT '用户2未读数',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     UNIQUE KEY uk_users_product (user1_id, user2_id, product_id),
     INDEX idx_user1 (user1_id),

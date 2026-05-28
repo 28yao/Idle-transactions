@@ -29,6 +29,7 @@ public class MessageService {
     private final ConversationMapper conversationMapper;
     private final UserMapper userMapper;
     private final ChatWebSocketHandler chatWebSocketHandler;
+    private final NotificationService notificationService;
 
     @Transactional
     public MessageResponse sendMessage(Long senderId, MessageSendRequest request) {
@@ -49,9 +50,14 @@ public class MessageService {
         msg.setOfferStatus(0);
         messageMapper.insert(msg);
 
-        // 更新会话最后消息
+        // 更新会话最后消息 + 未读计数
         conv.setLastMessage(request.getContent());
         conv.setLastMessageAt(msg.getCreatedAt());
+        if (conv.getUser1Id().equals(senderId)) {
+            conv.setUnreadCount2((conv.getUnreadCount2() != null ? conv.getUnreadCount2() : 0) + 1);
+        } else {
+            conv.setUnreadCount1((conv.getUnreadCount1() != null ? conv.getUnreadCount1() : 0) + 1);
+        }
         conversationMapper.updateById(conv);
 
         // 通过 WebSocket 通知对方
@@ -61,6 +67,17 @@ public class MessageService {
         wsMessage.put("type", "new_message");
         wsMessage.put("data", response);
         chatWebSocketHandler.sendToUser(receiverId, wsMessage);
+
+        // 创建私信通知
+        User sender = userMapper.selectById(senderId);
+        String senderName = sender != null ? sender.getNickname() : "用户";
+        notificationService.createNotification(
+                receiverId,
+                NotificationService.TYPE_MESSAGE,
+                "新私信",
+                senderName + "：" + (request.getContent() != null ? request.getContent() : "[图片]"),
+                conv.getId()
+        );
 
         return response;
     }

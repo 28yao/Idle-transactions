@@ -22,6 +22,10 @@ public class Conversation {
 
     private LocalDateTime lastMessageAt;
 
+    private Integer unreadCount1;
+
+    private Integer unreadCount2;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 }

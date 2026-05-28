@@ -60,8 +60,15 @@ const fetchConversations = async () => {
   }
 }
 
-const selectConversation = (id) => {
+const selectConversation = async (id) => {
   activeConversationId.value = id
+  // 标记已读
+  try {
+    await $api.put(`/api/conversations/${id}/read`)
+    // 更新本地未读数
+    const conv = conversations.value.find(c => c.id === id)
+    if (conv) conv.unreadCount = 0
+  } catch (e) {}
 }
 
 const sendMessage = async (content) => {

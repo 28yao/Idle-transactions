@@ -25,6 +25,7 @@ public class ReviewService {
     private final ReviewMapper reviewMapper;
     private final TransactionMapper transactionMapper;
     private final UserMapper userMapper;
+    private final NotificationService notificationService;
 
     private static final int STATUS_COMPLETED = 2;
 
@@ -68,6 +69,17 @@ public class ReviewService {
 
         // 更新用户好评率
         updateUserRating(targetId);
+
+        // 通知被评价人
+        User reviewer = userMapper.selectById(reviewerId);
+        String reviewerName = reviewer != null ? reviewer.getNickname() : "用户";
+        notificationService.createNotification(
+                targetId,
+                NotificationService.TYPE_INTERACTION,
+                "收到新评价",
+                reviewerName + " 给了你 " + request.getRating() + " 星评价",
+                review.getId()
+        );
 
         return buildResponse(review);
     }

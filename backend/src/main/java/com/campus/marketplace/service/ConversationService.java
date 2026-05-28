@@ -93,6 +93,18 @@ public class ConversationService {
         conversationMapper.deleteById(conversationId);
     }
 
+    @Transactional
+    public void markAsRead(Long conversationId, Long userId) {
+        Conversation conv = conversationMapper.selectById(conversationId);
+        if (conv == null) return;
+        if (conv.getUser1Id().equals(userId)) {
+            conv.setUnreadCount1(0);
+        } else {
+            conv.setUnreadCount2(0);
+        }
+        conversationMapper.updateById(conv);
+    }
+
     private ConversationResponse buildResponse(Conversation conv, Long currentUserId) {
         ConversationResponse r = new ConversationResponse();
         r.setId(conv.getId());
@@ -100,6 +112,13 @@ public class ConversationService {
         r.setLastMessage(conv.getLastMessage());
         r.setLastMessageAt(conv.getLastMessageAt());
         r.setCreatedAt(conv.getCreatedAt());
+
+        // 未读数
+        if (conv.getUser1Id().equals(currentUserId)) {
+            r.setUnreadCount(conv.getUnreadCount1() != null ? conv.getUnreadCount1() : 0);
+        } else {
+            r.setUnreadCount(conv.getUnreadCount2() != null ? conv.getUnreadCount2() : 0);
+        }
 
         // 对方用户
         Long otherUserId = conv.getUser1Id().equals(currentUserId) ? conv.getUser2Id() : conv.getUser1Id();

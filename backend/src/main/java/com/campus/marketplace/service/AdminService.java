@@ -26,6 +26,7 @@ public class AdminService {
     private final ProductMapper productMapper;
     private final TransactionMapper transactionMapper;
     private final ReportMapper reportMapper;
+    private final NotificationService notificationService;
 
     public Map<String, Object> getDashboard() {
         Map<String, Object> data = new HashMap<>();
@@ -123,6 +124,15 @@ public class AdminService {
         }
         user.setVerifyStatus(approved ? 2 : 3);
         userMapper.updateById(user);
+
+        // 通知用户审核结果
+        notificationService.createNotification(
+                userId,
+                NotificationService.TYPE_SYSTEM,
+                "认证审核结果",
+                approved ? "你的实名认证已通过" : "你的实名认证未通过，请重新提交",
+                userId
+        );
     }
 
     @Transactional
@@ -157,6 +167,15 @@ public class AdminService {
             report.setStatus(2); // 已驳回
         }
         reportMapper.updateById(report);
+
+        // 通知举报者处理结果
+        notificationService.createNotification(
+                report.getReporterId(),
+                NotificationService.TYPE_SYSTEM,
+                "举报处理结果",
+                approved ? "你举报的内容已被处理" : "你的举报已被驳回",
+                reportId
+        );
     }
 
     public PageResponse<Map<String, Object>> getReports(Integer status, int page, int size) {

@@ -17,3 +17,8 @@ ALTER TABLE products
 ALTER TABLE reviews
     ADD COLUMN target_id BIGINT NOT NULL COMMENT '被评价者ID' AFTER reviewer_id,
     ADD INDEX idx_target_id (target_id);
+
+-- 会话表添加未读计数字段
+ALTER TABLE conversations
+    ADD COLUMN unread_count1 INT DEFAULT 0 COMMENT '用户1未读数',
+    ADD COLUMN unread_count2 INT DEFAULT 0 COMMENT '用户2未读数';

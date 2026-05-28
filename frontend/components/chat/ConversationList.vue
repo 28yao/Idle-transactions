@@ -25,6 +25,9 @@
           <span class="conv-message">{{ conv.lastMessage }}</span>
         </div>
       </div>
+      <div v-if="conv.unreadCount > 0" class="unread-badge">
+        {{ conv.unreadCount > 99 ? '99+' : conv.unreadCount }}
+      </div>
       <el-button
         class="delete-btn"
         type="danger"
@@ -135,6 +138,20 @@ const formatTime = (time) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.unread-badge {
+  flex-shrink: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #f56c6c;
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  align-self: center;
 }
 
 .delete-btn {

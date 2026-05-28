@@ -44,4 +44,12 @@ public class ConversationController {
         conversationService.deleteConversation(id, userId);
         return ApiResponse.success("删除成功", null);
     }
+
+    @PutMapping("/{id}/read")
+    public ApiResponse<Void> markAsRead(@PathVariable("id") Long id,
+                                         HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        conversationService.markAsRead(id, userId);
+        return ApiResponse.success(null);
+    }
 }
