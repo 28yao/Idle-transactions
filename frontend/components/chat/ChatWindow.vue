@@ -74,7 +74,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const isSeller = computed(() => {
-  return authStore.user?.id === conversation?.value?.sellerId
+  return authStore.user?.id === props.conversation?.sellerId
 })
 
 const messages = ref([])
