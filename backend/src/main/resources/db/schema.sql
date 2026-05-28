@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     delivered_at DATETIME DEFAULT NULL COMMENT '卖家标记交付时间',
     completed_at DATETIME DEFAULT NULL COMMENT '完成时间',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    UNIQUE KEY uk_product_id (product_id),
+    INDEX idx_product_id (product_id),
     INDEX idx_buyer_id (buyer_id),
     INDEX idx_seller_id (seller_id),
     INDEX idx_status (status)
