@@ -37,6 +37,7 @@ import { ChatDotRound } from '@element-plus/icons-vue'
 import ConversationList from '~/components/chat/ConversationList.vue'
 import ChatWindow from '~/components/chat/ChatWindow.vue'
 
+const route = useRoute()
 const { $api } = useNuxtApp()
 const token = useCookie('token')
 
@@ -111,12 +112,17 @@ const connectWebSocket = () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (!token.value) {
     navigateTo('/login')
     return
   }
-  fetchConversations()
+  await fetchConversations()
+  // 从 URL 参数自动选中会话
+  const queryId = Number(route.query.id)
+  if (queryId && conversations.value.some(c => c.id === queryId)) {
+    activeConversationId.value = queryId
+  }
   connectWebSocket()
 })
 
