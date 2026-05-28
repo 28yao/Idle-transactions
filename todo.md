@@ -979,41 +979,41 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F10.1 | 创建评价弹窗组件 | frontend/components/review/ReviewDialog.vue | F1.2 | 弹窗正常显示 | 未开始 |
-| F10.2 | 实现评分选择组件 | frontend/components/review/RatingSelect.vue | F1.2 | 评分选择正常 | 未开始 |
-| F10.3 | 实现标签选择组件 | frontend/components/review/TagSelect.vue | F1.2 | 标签选择正常 | 未开始 |
-| F10.4 | 创建评价列表组件 | frontend/components/review/ReviewList.vue | F1.2 | 列表显示正常 | 未开始 |
+| F10.1 | 创建评价弹窗组件 | frontend/components/review/ReviewDialog.vue | F1.2 | 弹窗正常显示 | 已完成 |
+| F10.2 | 实现评分选择组件 | frontend/components/review/ReviewDialog.vue | F1.2 | 评分选择正常 | 已完成 |
+| F10.3 | 实现标签选择组件 | frontend/components/review/ReviewDialog.vue | F1.2 | 标签选择正常 | 已完成 |
+| F10.4 | 创建评价列表组件 | frontend/components/review/ReviewList.vue | F1.2 | 列表显示正常 | 已完成 |
 | F10.5 | 在个人主页显示评价 | frontend/pages/user/profile.vue | F10.4 | 评价显示正确 | 未开始 |
 
 ### 10.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B10.1 | 创建提交评价接口 | backend/src/main/java/.../controller/ReviewController.java | S1.2 | POST /api/reviews 返回成功 | 未开始 |
-| B10.2 | 创建获取评价接口 | backend/src/main/java/.../controller/ReviewController.java | S1.2 | GET /api/reviews/{transactionId} 返回评价 | 未开始 |
-| B10.3 | 创建用户评价列表接口 | backend/src/main/java/.../controller/UserController.java | S1.2 | GET /api/users/{id}/reviews 返回评价列表 | 未开始 |
+| B10.1 | 创建提交评价接口 | backend/src/main/java/.../controller/ReviewController.java | S1.2 | POST /api/reviews 返回成功 | 已完成 |
+| B10.2 | 创建获取评价接口 | backend/src/main/java/.../controller/ReviewController.java | S1.2 | GET /api/reviews/{transactionId} 返回评价 | 已完成 |
+| B10.3 | 创建用户评价列表接口 | backend/src/main/java/.../controller/ReviewController.java | S1.2 | GET /api/users/{id}/reviews 返回评价列表 | 已完成 |
 
 ### 10.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S10.1 | 实现评价提交逻辑 | backend/src/main/java/.../service/ReviewService.java | M10.1 | 评价保存成功 | 未开始 |
-| S10.2 | 实现好评率计算 | backend/src/main/java/.../service/ReviewService.java | M10.1 | 好评率计算正确 | 未开始 |
-| S10.3 | 实现超时默认好评 | backend/src/main/java/.../service/ReviewService.java | M10.1 | 7天后自动好评 | 未开始 |
+| S10.1 | 实现评价提交逻辑 | backend/src/main/java/.../service/ReviewService.java | M10.1 | 评价保存成功 | 已完成 |
+| S10.2 | 实现好评率计算 | backend/src/main/java/.../service/ReviewService.java | M10.1 | 好评率计算正确 | 已完成 |
+| S10.3 | 实现超时默认好评 | backend/src/main/java/.../service/ReviewService.java | M10.1 | 7天后自动好评 | 跳过 |
 
 ### 10.7 Mapper 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| M10.1 | 创建ReviewMapper | backend/src/main/java/.../mapper/ReviewMapper.java | M1.1 | 能正常查询评价 | 未开始 |
+| M10.1 | 创建ReviewMapper | backend/src/main/java/.../mapper/ReviewMapper.java | M1.1 | 能正常查询评价 | 已完成 |
 
 ### 10.8 Repository / 数据保存任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| D10.1 | 创建Review实体类 | backend/src/main/java/.../entity/Review.java | M1.1 | 字段与数据库对应 | 未开始 |
-| D10.2 | 创建评价请求DTO | backend/src/main/java/.../dto/request/ReviewRequest.java | 无 | 字段验证生效 | 未开始 |
-| D10.3 | 创建评价响应DTO | backend/src/main/java/.../dto/response/ReviewResponse.java | 无 | 返回字段正确 | 未开始 |
+| D10.1 | 创建Review实体类 | backend/src/main/java/.../entity/Review.java | M1.1 | 字段与数据库对应 | 已完成 |
+| D10.2 | 创建评价请求DTO | backend/src/main/java/.../dto/request/ReviewRequest.java | 无 | 字段验证生效 | 已完成 |
+| D10.3 | 创建评价响应DTO | backend/src/main/java/.../dto/response/ReviewResponse.java | 无 | 返回字段正确 | 已完成 |
 
 ### 10.9 页面测试方法
 
@@ -1042,7 +1042,7 @@
 
 ### 10.12 当前状态
 
-- 未开始
+- 基本完成（F10.5 个人主页显示评价未实现）
 
 ---
 

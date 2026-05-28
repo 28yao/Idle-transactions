@@ -1,29 +1,21 @@
-package com.campus.marketplace.entity;
+package com.campus.marketplace.dto.response;
 
-import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@TableName("reviews")
-public class Review {
+public class ReviewResponse {
 
-    @TableId(type = IdType.AUTO)
     private Long id;
-
     private Long transactionId;
-
     private Long reviewerId;
-
+    private String reviewerNickname;
+    private String reviewerAvatar;
     private Long targetId;
-
+    private String targetNickname;
     private Integer rating;
-
     private String content;
-
     private String tags;
-
-    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 }

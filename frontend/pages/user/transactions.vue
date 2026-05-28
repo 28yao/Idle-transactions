@@ -68,6 +68,11 @@
               确认收货
             </el-button>
           </template>
+          <template v-if="t.status === 2">
+            <el-button type="warning" size="small" @click.stop="openReview(t)">
+              去评价
+            </el-button>
+          </template>
           <template v-if="(t.status === 0 || t.status === 1) && !isCancelRequester(t)">
             <el-button type="danger" text size="small" @click.stop="cancelTransaction(t)">
               申请取消
@@ -143,6 +148,13 @@
         <el-button type="primary" @click="submitCancelRequest">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 评价弹窗 -->
+    <ReviewDialog
+      v-if="reviewVisible"
+      :transaction-id="reviewTransactionId"
+      @submitted="onReviewSubmitted"
+    />
   </div>
 </template>
 
@@ -150,6 +162,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Picture } from '@element-plus/icons-vue'
 import { TransactionStatusLabel, TransactionStatusType } from '~/types/transaction'
+import ReviewDialog from '~/components/review/ReviewDialog.vue'
 
 const { $api } = useNuxtApp()
 const token = useCookie('token')
@@ -167,6 +180,9 @@ const currentUserId = computed(() => {
 })
 
 const activeTab = ref('all')
+
+const reviewVisible = ref(false)
+const reviewTransactionId = ref(null)
 const transactions = ref([])
 const loading = ref(false)
 const currentPage = ref(1)
@@ -283,6 +299,17 @@ const rejectCancel = async (t) => {
   } catch (e) {
     if (e !== 'cancel') ElMessage.error(e.message || '操作失败')
   }
+}
+
+const openReview = (t) => {
+  reviewTransactionId.value = t.id
+  reviewVisible.value = true
+}
+
+const onReviewSubmitted = () => {
+  reviewVisible.value = false
+  reviewTransactionId.value = null
+  fetchTransactions()
 }
 
 onMounted(() => {
