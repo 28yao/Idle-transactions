@@ -165,6 +165,18 @@ const scrollToBottom = () => {
   }
 }
 
+// 添加新消息（供父组件调用）
+const addMessage = (msg) => {
+  // 避免重复添加
+  if (!messages.value.some(m => m.id === msg.id)) {
+    messages.value.push(msg)
+    nextTick(scrollToBottom)
+  }
+}
+
+// 暴露方法给父组件
+defineExpose({ addMessage })
+
 watch(() => props.conversationId, fetchMessages)
 
 onMounted(fetchMessages)

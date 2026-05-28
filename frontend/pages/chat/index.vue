@@ -18,6 +18,7 @@
       <div class="chat-panel">
         <ChatWindow
           v-if="activeConversationId"
+          ref="chatWindowRef"
           :conversation-id="activeConversationId"
           :conversation="activeConversation"
           @send="sendMessage"
@@ -45,6 +46,7 @@ const token = useCookie('token')
 const conversations = ref([])
 const activeConversationId = ref(null)
 const ws = ref(null)
+const chatWindowRef = ref(null)
 
 const activeConversation = computed(() => {
   return conversations.value.find(c => c.id === activeConversationId.value)
@@ -114,6 +116,10 @@ const connectWebSocket = () => {
       if (data.type === 'new_message') {
         // 新消息到达，刷新会话列表
         fetchConversations()
+        // 如果是当前会话的消息，添加到聊天窗口
+        if (data.data && data.data.conversationId === activeConversationId.value && chatWindowRef.value) {
+          chatWindowRef.value.addMessage(data.data)
+        }
       }
     } catch (e) {
       console.error('WebSocket message parse error:', e)
