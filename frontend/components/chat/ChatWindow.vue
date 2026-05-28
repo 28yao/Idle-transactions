@@ -73,21 +73,7 @@ const { $api } = useNuxtApp()
 const router = useRouter()
 const authStore = useAuthStore()
 
-const isSeller = computed(() => {
-  if (!authStore.user || !props.conversation?.sellerId) return false
-  return authStore.user.id === props.conversation.sellerId
-})
-
-const showPurchaseButton = computed(() => {
-  return authStore.user && props.conversation?.productId && !isSeller.value
-})
-
-const messages = ref([])
-const loading = ref(false)
-const inputText = ref('')
-const messageListRef = ref(null)
-
-// 从 token 获取当前用户 ID
+// 从 token 获取当前用户 ID（同步）
 const currentUserId = computed(() => {
   const token = useCookie('token')
   if (!token.value) return null
@@ -98,6 +84,20 @@ const currentUserId = computed(() => {
     return null
   }
 })
+
+const isSeller = computed(() => {
+  if (!currentUserId.value || !props.conversation?.sellerId) return false
+  return currentUserId.value === props.conversation.sellerId
+})
+
+const showPurchaseButton = computed(() => {
+  return currentUserId.value && props.conversation?.productId && !isSeller.value
+})
+
+const messages = ref([])
+const loading = ref(false)
+const inputText = ref('')
+const messageListRef = ref(null)
 
 const fetchMessages = async () => {
   if (!props.conversationId) return
