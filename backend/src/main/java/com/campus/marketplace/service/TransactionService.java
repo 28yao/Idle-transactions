@@ -6,11 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.marketplace.dto.response.PageResponse;
 import com.campus.marketplace.dto.response.TransactionResponse;
 import com.campus.marketplace.entity.Product;
+import com.campus.marketplace.entity.ProductImage;
 import com.campus.marketplace.entity.Review;
 import com.campus.marketplace.entity.Transaction;
 import com.campus.marketplace.entity.User;
 import com.campus.marketplace.exception.BusinessException;
 import com.campus.marketplace.exception.ErrorCode;
+import com.campus.marketplace.mapper.ProductImageMapper;
 import com.campus.marketplace.mapper.ProductMapper;
 import com.campus.marketplace.mapper.ReviewMapper;
 import com.campus.marketplace.mapper.TransactionMapper;
@@ -30,6 +32,7 @@ public class TransactionService {
 
     private final TransactionMapper transactionMapper;
     private final ProductMapper productMapper;
+    private final ProductImageMapper productImageMapper;
     private final UserMapper userMapper;
     private final ReviewMapper reviewMapper;
     private final NotificationService notificationService;
@@ -275,8 +278,21 @@ public class TransactionService {
         Product product = productMapper.selectById(t.getProductId());
         if (product != null) {
             r.setProductTitle(product.getTitle());
-            // 获取商品封面图（简化处理，取第一张）
-            r.setProductImage(null);
+            // 获取商品封面图
+            LambdaQueryWrapper<ProductImage> imgW = new LambdaQueryWrapper<>();
+            imgW.eq(ProductImage::getProductId, product.getId())
+                .eq(ProductImage::getIsCover, 1);
+            ProductImage cover = productImageMapper.selectOne(imgW);
+            if (cover != null) {
+                r.setProductImage(cover.getUrl());
+            } else {
+                // fallback: 取第一张图
+                LambdaQueryWrapper<ProductImage> imgW2 = new LambdaQueryWrapper<>();
+                imgW2.eq(ProductImage::getProductId, product.getId())
+                     .orderByAsc(ProductImage::getSortOrder).last("LIMIT 1");
+                ProductImage first = productImageMapper.selectOne(imgW2);
+                r.setProductImage(first != null ? first.getUrl() : null);
+            }
         }
 
         // 买家信息
