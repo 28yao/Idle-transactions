@@ -6,11 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.marketplace.dto.response.PageResponse;
 import com.campus.marketplace.dto.response.TransactionResponse;
 import com.campus.marketplace.entity.Product;
+import com.campus.marketplace.entity.Review;
 import com.campus.marketplace.entity.Transaction;
 import com.campus.marketplace.entity.User;
 import com.campus.marketplace.exception.BusinessException;
 import com.campus.marketplace.exception.ErrorCode;
 import com.campus.marketplace.mapper.ProductMapper;
+import com.campus.marketplace.mapper.ReviewMapper;
 import com.campus.marketplace.mapper.TransactionMapper;
 import com.campus.marketplace.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class TransactionService {
     private final TransactionMapper transactionMapper;
     private final ProductMapper productMapper;
     private final UserMapper userMapper;
+    private final ReviewMapper reviewMapper;
 
     // 状态常量
     private static final int STATUS_ONGOING = 0;      // 进行中
@@ -217,7 +220,7 @@ public class TransactionService {
 
         List<TransactionResponse> items = new ArrayList<>();
         for (Transaction t : result.getRecords()) {
-            items.add(buildResponse(t));
+            items.add(buildResponse(t, userId));
         }
         return PageResponse.of(items, result.getTotal(), size, page);
     }
@@ -230,10 +233,10 @@ public class TransactionService {
         if (!transaction.getBuyerId().equals(userId) && !transaction.getSellerId().equals(userId)) {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
-        return buildResponse(transaction);
+        return buildResponse(transaction, userId);
     }
 
-    private TransactionResponse buildResponse(Transaction t) {
+    private TransactionResponse buildResponse(Transaction t, Long currentUserId) {
         TransactionResponse r = TransactionResponse.fromEntity(t);
 
         // 商品信息
@@ -258,6 +261,21 @@ public class TransactionService {
             r.setSellerAvatar(seller.getAvatar());
         }
 
+        // 检查当前用户是否已评价
+        if (currentUserId != null && t.getStatus() == STATUS_COMPLETED) {
+            LambdaQueryWrapper<Review> reviewWrapper = new LambdaQueryWrapper<>();
+            reviewWrapper.eq(Review::getTransactionId, t.getId())
+                    .eq(Review::getReviewerId, currentUserId);
+            Long reviewCount = reviewMapper.selectCount(reviewWrapper);
+            r.setReviewed(reviewCount > 0);
+        } else {
+            r.setReviewed(false);
+        }
+
         return r;
+    }
+
+    private TransactionResponse buildResponse(Transaction t) {
+        return buildResponse(t, null);
     }
 }

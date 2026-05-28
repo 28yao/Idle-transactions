@@ -26,6 +26,7 @@ public class TransactionResponse {
     private LocalDateTime deliveredAt;
     private LocalDateTime completedAt;
     private LocalDateTime createdAt;
+    private Boolean reviewed;
 
     public static TransactionResponse fromEntity(Transaction t) {
         TransactionResponse r = new TransactionResponse();

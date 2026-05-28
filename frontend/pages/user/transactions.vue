@@ -68,10 +68,13 @@
               确认收货
             </el-button>
           </template>
-          <template v-if="t.status === 2">
+          <template v-if="t.status === 2 && !t.reviewed">
             <el-button type="warning" size="small" @click.stop="openReview(t)">
               去评价
             </el-button>
+          </template>
+          <template v-if="t.status === 2 && t.reviewed">
+            <el-tag type="success" size="small">已评价</el-tag>
           </template>
           <template v-if="(t.status === 0 || t.status === 1) && !isCancelRequester(t)">
             <el-button type="danger" text size="small" @click.stop="cancelTransaction(t)">
