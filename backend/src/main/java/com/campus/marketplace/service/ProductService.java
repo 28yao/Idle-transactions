@@ -1,0 +1,172 @@
+package com.campus.marketplace.service;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.campus.marketplace.dto.request.ProductCreateRequest;
+import com.campus.marketplace.dto.response.ProductResponse;
+import com.campus.marketplace.entity.Product;
+import com.campus.marketplace.entity.ProductImage;
+import com.campus.marketplace.entity.User;
+import com.campus.marketplace.exception.BusinessException;
+import com.campus.marketplace.exception.ErrorCode;
+import com.campus.marketplace.mapper.ProductImageMapper;
+import com.campus.marketplace.mapper.ProductMapper;
+import com.campus.marketplace.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ProductService {
+
+    private final ProductMapper productMapper;
+    private final ProductImageMapper productImageMapper;
+    private final UserMapper userMapper;
+
+    private static final int MAX_PUBLISHED = 20;
+    private static final int MAX_IMAGES = 9;
+
+    @Transactional
+    public ProductResponse createProduct(Long sellerId, ProductCreateRequest request) {
+        validateImages(request.getImages());
+
+        // 检查在售上限
+        if (request.getStatus() != null && request.getStatus() == 1) {
+            LambdaQueryWrapper<Product> w = new LambdaQueryWrapper<>();
+            w.eq(Product::getSellerId, sellerId).eq(Product::getStatus, 1);
+            long count = productMapper.selectCount(w);
+            if (count >= MAX_PUBLISHED) {
+                throw new BusinessException(ErrorCode.BAD_REQUEST.getCode(),
+                        "最多同时发布" + MAX_PUBLISHED + "件商品");
+            }
+        }
+
+        Product product = new Product();
+        product.setSellerId(sellerId);
+        product.setTitle(request.getTitle());
+        product.setDescription(request.getDescription());
+        product.setCategory(request.getCategory());
+        product.setPrice(request.getPrice());
+        product.setOriginalPrice(request.getOriginalPrice());
+        product.setCondition(request.getCondition());
+        product.setLocation(request.getLocation());
+        // 校区：优先 request，否则取卖家校区
+        if (request.getCampus() != null && !request.getCampus().isBlank()) {
+            product.setCampus(request.getCampus());
+        } else {
+            User seller = userMapper.selectById(sellerId);
+            if (seller != null) {
+                product.setCampus(seller.getCampus());
+            }
+        }
+        // status：0=草稿  1=在售
+        product.setStatus(request.getStatus() == null ? 0 : request.getStatus());
+        product.setViewCount(0);
+        product.setFavCount(0);
+
+        productMapper.insert(product);
+
+        saveImages(product.getId(), request.getImages());
+
+        return buildResponse(product);
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(Long productId, Long sellerId, ProductCreateRequest request) {
+        Product product = productMapper.selectById(productId);
+        if (product == null) {
+            throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        if (!product.getSellerId().equals(sellerId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+        Integer current = product.getStatus();
+        if (current != null && (current == 2 || current == 5)) {
+            // 已售 / 违规下架 不允许编辑
+            throw new BusinessException(ErrorCode.PRODUCT_STATUS_ERROR);
+        }
+
+        validateImages(request.getImages());
+
+        product.setTitle(request.getTitle());
+        product.setDescription(request.getDescription());
+        product.setCategory(request.getCategory());
+        product.setPrice(request.getPrice());
+        product.setOriginalPrice(request.getOriginalPrice());
+        product.setCondition(request.getCondition());
+        product.setLocation(request.getLocation());
+        if (request.getCampus() != null && !request.getCampus().isBlank()) {
+            product.setCampus(request.getCampus());
+        }
+        if (request.getStatus() != null) {
+            product.setStatus(request.getStatus());
+        }
+        product.setRejectReason(null);
+
+        productMapper.updateById(product);
+
+        // 重置图片
+        LambdaQueryWrapper<ProductImage> w = new LambdaQueryWrapper<>();
+        w.eq(ProductImage::getProductId, productId);
+        productImageMapper.delete(w);
+        saveImages(productId, request.getImages());
+
+        return buildResponse(product);
+    }
+
+    public ProductResponse getProductDetail(Long productId) {
+        Product product = productMapper.selectById(productId);
+        if (product == null) {
+            throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        return buildResponse(product);
+    }
+
+    private void validateImages(List<String> images) {
+        if (images != null && images.size() > MAX_IMAGES) {
+            throw new BusinessException(ErrorCode.PRODUCT_IMAGES_LIMIT);
+        }
+    }
+
+    private void saveImages(Long productId, List<String> images) {
+        if (images == null || images.isEmpty()) return;
+        for (int i = 0; i < images.size(); i++) {
+            ProductImage img = new ProductImage();
+            img.setProductId(productId);
+            img.setUrl(images.get(i));
+            img.setSortOrder(i);
+            img.setIsCover(i == 0 ? 1 : 0);
+            productImageMapper.insert(img);
+        }
+    }
+
+    private ProductResponse buildResponse(Product product) {
+        ProductResponse r = ProductResponse.fromEntity(product);
+
+        LambdaQueryWrapper<ProductImage> w = new LambdaQueryWrapper<>();
+        w.eq(ProductImage::getProductId, product.getId()).orderByAsc(ProductImage::getSortOrder);
+        List<ProductImage> imageList = productImageMapper.selectList(w);
+        List<String> urls = new ArrayList<>();
+        for (ProductImage img : imageList) {
+            urls.add(img.getUrl());
+            if (img.getIsCover() != null && img.getIsCover() == 1) {
+                r.setCoverImage(img.getUrl());
+            }
+        }
+        if (r.getCoverImage() == null && !urls.isEmpty()) {
+            r.setCoverImage(urls.get(0));
+        }
+        r.setImages(urls);
+
+        User seller = userMapper.selectById(product.getSellerId());
+        if (seller != null) {
+            r.setSellerNickname(seller.getNickname());
+            r.setSellerAvatar(seller.getAvatar());
+            r.setSellerVerifyStatus(seller.getVerifyStatus());
+        }
+        return r;
+    }
+}

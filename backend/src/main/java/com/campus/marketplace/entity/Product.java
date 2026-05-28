@@ -25,6 +25,7 @@ public class Product {
 
     private BigDecimal originalPrice;
 
+    @TableField("`condition`")
     private String condition;
 
     private String location;

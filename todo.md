@@ -257,36 +257,36 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F3.1 | 创建实名认证页面 | frontend/pages/user/verify.vue | F1.6 | 页面能正常显示 | 未开始 |
-| F3.2 | 实现图片上传组件 | frontend/components/common/ImageUpload.vue | F1.2 | 图片能正常上传 | 未开始 |
-| F3.3 | 调用认证提交API | frontend/pages/user/verify.vue | F3.1, B3.1 | 提交成功显示提示 | 未开始 |
-| F3.4 | 显示认证状态 | frontend/pages/user/verify.vue | F3.1 | 状态显示正确 | 未开始 |
+| F3.1 | 创建实名认证页面 | frontend/pages/user/verify.vue | F1.6 | 页面能正常显示 | 已完成 |
+| F3.2 | 实现图片上传组件 | frontend/components/common/ImageUpload.vue | F1.2 | 图片能正常上传 | 已完成 |
+| F3.3 | 调用认证提交API | frontend/pages/user/verify.vue | F3.1, B3.1 | 提交成功显示提示 | 已完成 |
+| F3.4 | 显示认证状态 | frontend/pages/user/verify.vue | F3.1 | 状态显示正确 | 已完成 |
 
 ### 3.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B3.1 | 创建提交认证接口 | backend/src/main/java/.../controller/UserController.java | S1.2 | POST /api/users/verify 返回成功 | 未开始 |
-| B3.2 | 创建上传认证图片接口 | backend/src/main/java/.../controller/UserController.java | S1.2 | POST /api/users/verify/image 返回图片URL | 未开始 |
+| B3.1 | 创建提交认证接口 | backend/src/main/java/.../controller/UserController.java | S1.2 | POST /api/users/verify 返回成功 | 已完成 |
+| B3.2 | 创建上传认证图片接口 | backend/src/main/java/.../controller/UserController.java | S1.2 | POST /api/users/verify/image 返回图片URL | 已完成 |
 
 ### 3.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S3.1 | 实现认证提交逻辑 | backend/src/main/java/.../service/UserService.java | M2.1 | 状态更新为"审核中" | 未开始 |
-| S3.2 | 实现图片上传逻辑 | backend/src/main/java/.../service/FileService.java | 无 | 图片保存成功 | 未开始 |
+| S3.1 | 实现认证提交逻辑 | backend/src/main/java/.../service/UserService.java | M2.1 | 状态更新为"审核中" | 已完成 |
+| S3.2 | 实现图片上传逻辑 | backend/src/main/java/.../service/FileService.java | 无 | 图片保存成功 | 已完成 |
 
 ### 3.7 Mapper 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| M3.1 | 更新UserMapper添加认证相关方法 | backend/src/main/java/.../mapper/UserMapper.java | M2.1 | 能更新认证状态 | 未开始 |
+| M3.1 | 更新UserMapper添加认证相关方法 | backend/src/main/java/.../mapper/UserMapper.java | M2.1 | 能更新认证状态 | 已完成 |
 
 ### 3.8 Repository / 数据保存任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| D3.1 | 创建认证请求DTO | backend/src/main/java/.../dto/request/VerifyRequest.java | 无 | 字段验证生效 | 未开始 |
+| D3.1 | 创建认证请求DTO | backend/src/main/java/.../dto/request/VerifyRequest.java | 无 | 字段验证生效 | 已完成 |
 
 ### 3.9 页面测试方法
 
@@ -315,7 +315,7 @@
 
 ### 3.12 当前状态
 
-- 未开始
+- 已完成
 
 ---
 
@@ -359,46 +359,46 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F4.1 | 创建发布商品页面 | frontend/pages/product/publish.vue | F1.6 | 页面能正常显示 | 未开始 |
-| F4.2 | 实现商品图片上传组件 | frontend/components/product/ProductImageUpload.vue | F3.2 | 图片能正常上传 | 未开始 |
-| F4.3 | 实现表单验证 | frontend/pages/product/publish.vue | F4.1 | 表单验证生效 | 未开始 |
-| F4.4 | 调用发布API | frontend/pages/product/publish.vue | F4.1, B4.1 | 发布成功跳转详情页 | 未开始 |
-| F4.5 | 调用保存草稿API | frontend/pages/product/publish.vue | F4.1, B4.1 | 保存成功显示提示 | 未开始 |
-| F4.6 | 支持编辑模式加载数据 | frontend/pages/product/publish.vue | F4.1, B5.3 | 访问 ?edit={id} 自动填充表单 | 未开始 |
+| F4.1 | 创建发布商品页面 | frontend/pages/product/publish.vue | F1.6 | 页面能正常显示 | 已完成 |
+| F4.2 | 实现商品图片上传组件 | frontend/components/product/ProductImageUpload.vue | F3.2 | 图片能正常上传 | 已完成 |
+| F4.3 | 实现表单验证 | frontend/pages/product/publish.vue | F4.1 | 表单验证生效 | 已完成 |
+| F4.4 | 调用发布API | frontend/pages/product/publish.vue | F4.1, B4.1 | 发布成功跳转详情页 | 已完成 |
+| F4.5 | 调用保存草稿API | frontend/pages/product/publish.vue | F4.1, B4.1 | 保存成功显示提示 | 已完成 |
+| F4.6 | 支持编辑模式加载数据 | frontend/pages/product/publish.vue | F4.1, B5.3 | 访问 ?edit={id} 自动填充表单 | 已完成 |
 
 ### 4.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B4.1 | 创建发布商品接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | POST /api/products 返回商品信息 | 未开始 |
-| B4.2 | 创建上传商品图片接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | POST /api/products/images 返回图片URL列表 | 未开始 |
-| B4.3 | 创建更新商品接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | PUT /api/products/{id} 返回更新成功 | 未开始 |
+| B4.1 | 创建发布商品接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | POST /api/products 返回商品信息 | 已完成 |
+| B4.2 | 创建上传商品图片接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | POST /api/products/images 返回图片URL列表 | 已完成 |
+| B4.3 | 创建更新商品接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | PUT /api/products/{id} 返回更新成功 | 已完成 |
 
 ### 4.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S4.1 | 实现商品发布逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 商品状态为"审核中" | 未开始 |
-| S4.2 | 实现草稿保存逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 商品状态为"草稿" | 未开始 |
-| S4.3 | 实现批量图片上传 | backend/src/main/java/.../service/FileService.java | S3.2 | 多张图片上传成功 | 未开始 |
-| S4.4 | 实现商品编辑逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 商品更新成功，状态重置为"审核中" | 未开始 |
+| S4.1 | 实现商品发布逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 商品状态为"在售" | 已完成 |
+| S4.2 | 实现草稿保存逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 商品状态为"草稿" | 已完成 |
+| S4.3 | 实现批量图片上传 | backend/src/main/java/.../service/FileService.java | S3.2 | 多张图片上传成功 | 已完成 |
+| S4.4 | 实现商品编辑逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 商品更新成功 | 已完成 |
 
 ### 4.7 Mapper 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| M4.1 | 创建ProductMapper | backend/src/main/java/.../mapper/ProductMapper.java | M1.1 | 能正常查询商品 | 未开始 |
+| M4.1 | 创建ProductMapper | backend/src/main/java/.../mapper/ProductMapper.java | M1.1 | 能正常查询商品 | 已完成 |
 | M4.2 | 创建ProductMapper.xml | backend/src/main/resources/mapper/ProductMapper.xml | M4.1 | 自定义SQL能执行 | 无需验收 |
-| M4.3 | 创建ProductImageMapper | backend/src/main/java/.../mapper/ProductImageMapper.java | M1.1 | 能正常查询图片 | 未开始 |
+| M4.3 | 创建ProductImageMapper | backend/src/main/java/.../mapper/ProductImageMapper.java | M1.1 | 能正常查询图片 | 已完成 |
 
 ### 4.8 Repository / 数据保存任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| D4.1 | 创建Product实体类 | backend/src/main/java/.../entity/Product.java | M1.1 | 字段与数据库对应 | 未开始 |
-| D4.2 | 创建ProductImage实体类 | backend/src/main/java/.../entity/ProductImage.java | M1.1 | 字段与数据库对应 | 未开始 |
-| D4.3 | 创建商品发布请求DTO | backend/src/main/java/.../dto/request/ProductCreateRequest.java | 无 | 字段验证生效 | 未开始 |
-| D4.4 | 创建商品响应DTO | backend/src/main/java/.../dto/response/ProductResponse.java | 无 | 返回字段正确 | 未开始 |
+| D4.1 | 创建Product实体类 | backend/src/main/java/.../entity/Product.java | M1.1 | 字段与数据库对应 | 已完成 |
+| D4.2 | 创建ProductImage实体类 | backend/src/main/java/.../entity/ProductImage.java | M1.1 | 字段与数据库对应 | 已完成 |
+| D4.3 | 创建商品发布请求DTO | backend/src/main/java/.../dto/request/ProductCreateRequest.java | 无 | 字段验证生效 | 已完成 |
+| D4.4 | 创建商品响应DTO | backend/src/main/java/.../dto/response/ProductResponse.java | 无 | 返回字段正确 | 已完成 |
 
 ### 4.9 页面测试方法
 
@@ -432,7 +432,7 @@
 
 ### 4.12 当前状态
 
-- 未开始
+- 已完成
 
 ---
 
