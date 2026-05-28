@@ -7,6 +7,7 @@
       <el-tab-pane label="进行中" name="0" />
       <el-tab-pane label="已交付" name="1" />
       <el-tab-pane label="已完成" name="2" />
+      <el-tab-pane label="待确认取消" name="4" />
       <el-tab-pane label="已取消" name="3" />
     </el-tabs>
 
@@ -67,9 +68,20 @@
               确认收货
             </el-button>
           </template>
-          <template v-if="t.status === 0 || t.status === 1">
+          <template v-if="(t.status === 0 || t.status === 1) && !isCancelRequester(t)">
             <el-button type="danger" text size="small" @click.stop="cancelTransaction(t)">
               申请取消
+            </el-button>
+          </template>
+          <template v-if="t.status === 4 && isCancelRequester(t)">
+            <el-tag type="warning" size="small">等待对方确认取消</el-tag>
+          </template>
+          <template v-if="t.status === 4 && !isCancelRequester(t)">
+            <el-button type="danger" size="small" @click.stop="confirmCancel(t)">
+              确认取消
+            </el-button>
+            <el-button type="info" size="small" @click.stop="rejectCancel(t)">
+              拒绝取消
             </el-button>
           </template>
         </div>
@@ -128,7 +140,7 @@
       </el-form>
       <template #footer>
         <el-button @click="cancelDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmCancel">确定</el-button>
+        <el-button type="primary" @click="submitCancelRequest">确定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -195,6 +207,7 @@ const handleTabChange = () => {
 
 const isBuyer = (t) => currentUserId.value && currentUserId.value === t.buyerId
 const isSeller = (t) => currentUserId.value && currentUserId.value === t.sellerId
+const isCancelRequester = (t) => currentUserId.value && currentUserId.value === t.cancelBy
 
 const getStatusLabel = (status) => TransactionStatusLabel[status] || '未知'
 const getStatusType = (status) => TransactionStatusType[status] || 'info'
@@ -238,15 +251,37 @@ const cancelTransaction = (t) => {
   cancelDialogVisible.value = true
 }
 
-const confirmCancel = async () => {
+const submitCancelRequest = async () => {
   try {
     const params = cancelReason.value ? { reason: cancelReason.value } : {}
     await $api.post(`/api/transactions/${cancelTarget.value.id}/cancel`, null, { params })
-    ElMessage.success('已申请取消')
+    ElMessage.success('已申请取消，等待对方确认')
     cancelDialogVisible.value = false
     fetchTransactions()
   } catch (e) {
     ElMessage.error(e.message || '操作失败')
+  }
+}
+
+const confirmCancel = async (t) => {
+  try {
+    await ElMessageBox.confirm('确认取消此交易？商品将重新上架。', '确认取消')
+    await $api.post(`/api/transactions/${t.id}/confirm-cancel`)
+    ElMessage.success('已确认取消')
+    fetchTransactions()
+  } catch (e) {
+    if (e !== 'cancel') ElMessage.error(e.message || '操作失败')
+  }
+}
+
+const rejectCancel = async (t) => {
+  try {
+    await ElMessageBox.confirm('拒绝取消请求？交易将继续进行。', '拒绝取消')
+    await $api.post(`/api/transactions/${t.id}/reject-cancel`)
+    ElMessage.success('已拒绝取消')
+    fetchTransactions()
+  } catch (e) {
+    if (e !== 'cancel') ElMessage.error(e.message || '操作失败')
   }
 }
 

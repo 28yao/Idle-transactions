@@ -35,6 +35,7 @@ public class TransactionService {
     private static final int STATUS_DELIVERED = 1;    // 卖家已交付
     private static final int STATUS_COMPLETED = 2;    // 已完成
     private static final int STATUS_CANCELLED = 3;    // 已取消
+    private static final int STATUS_PENDING_CANCEL = 4; // 待确认取消
 
     // 商品状态
     private static final int PRODUCT_ON_SALE = 1;
@@ -127,13 +128,39 @@ public class TransactionService {
         if (!transaction.getBuyerId().equals(userId) && !transaction.getSellerId().equals(userId)) {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
-        if (transaction.getStatus() == STATUS_COMPLETED || transaction.getStatus() == STATUS_CANCELLED) {
+        if (transaction.getStatus() == STATUS_COMPLETED || transaction.getStatus() == STATUS_CANCELLED || transaction.getStatus() == STATUS_PENDING_CANCEL) {
             throw new BusinessException(ErrorCode.TRANSACTION_STATUS_ERROR.getCode(), "当前状态不允许取消");
         }
 
-        transaction.setStatus(STATUS_CANCELLED);
+        // 设置为待确认取消状态
+        transaction.setStatus(STATUS_PENDING_CANCEL);
         transaction.setCancelReason(reason);
         transaction.setCancelBy(userId);
+        transactionMapper.updateById(transaction);
+
+        return buildResponse(transaction);
+    }
+
+    @Transactional
+    public TransactionResponse confirmCancel(Long transactionId, Long userId) {
+        Transaction transaction = transactionMapper.selectById(transactionId);
+        if (transaction == null) {
+            throw new BusinessException(ErrorCode.TRANSACTION_NOT_FOUND);
+        }
+        // 只有对方可以确认取消
+        if (transaction.getCancelBy().equals(userId)) {
+            throw new BusinessException(ErrorCode.BAD_REQUEST.getCode(), "不能确认自己发起的取消请求");
+        }
+        // 必须是交易的买家或卖家
+        if (!transaction.getBuyerId().equals(userId) && !transaction.getSellerId().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+        if (transaction.getStatus() != STATUS_PENDING_CANCEL) {
+            throw new BusinessException(ErrorCode.TRANSACTION_STATUS_ERROR.getCode(), "当前状态不是待确认取消");
+        }
+
+        // 确认取消
+        transaction.setStatus(STATUS_CANCELLED);
         transactionMapper.updateById(transaction);
 
         // 商品重新上架
@@ -142,6 +169,37 @@ public class TransactionService {
             product.setStatus(PRODUCT_ON_SALE);
             productMapper.updateById(product);
         }
+
+        return buildResponse(transaction);
+    }
+
+    @Transactional
+    public TransactionResponse rejectCancel(Long transactionId, Long userId) {
+        Transaction transaction = transactionMapper.selectById(transactionId);
+        if (transaction == null) {
+            throw new BusinessException(ErrorCode.TRANSACTION_NOT_FOUND);
+        }
+        // 只有对方可以拒绝取消
+        if (transaction.getCancelBy().equals(userId)) {
+            throw new BusinessException(ErrorCode.BAD_REQUEST.getCode(), "不能拒绝自己发起的取消请求");
+        }
+        // 必须是交易的买家或卖家
+        if (!transaction.getBuyerId().equals(userId) && !transaction.getSellerId().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+        if (transaction.getStatus() != STATUS_PENDING_CANCEL) {
+            throw new BusinessException(ErrorCode.TRANSACTION_STATUS_ERROR.getCode(), "当前状态不是待确认取消");
+        }
+
+        // 拒绝取消，恢复原状态
+        if (transaction.getDeliveredAt() != null) {
+            transaction.setStatus(STATUS_DELIVERED);
+        } else {
+            transaction.setStatus(STATUS_ONGOING);
+        }
+        transaction.setCancelReason(null);
+        transaction.setCancelBy(null);
+        transactionMapper.updateById(transaction);
 
         return buildResponse(transaction);
     }

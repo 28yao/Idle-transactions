@@ -18,12 +18,13 @@ export interface Transaction {
   createdAt: string
 }
 
-/** 交易状态：0进行中 1卖家已交付 2已完成 3已取消 */
+/** 交易状态：0进行中 1卖家已交付 2已完成 3已取消 4待确认取消 */
 export const TransactionStatus = {
   ONGOING: 0,
   DELIVERED: 1,
   COMPLETED: 2,
   CANCELLED: 3,
+  PENDING_CANCEL: 4,
 } as const
 
 export const TransactionStatusLabel: Record<number, string> = {
@@ -31,6 +32,7 @@ export const TransactionStatusLabel: Record<number, string> = {
   1: '卖家已交付',
   2: '已完成',
   3: '已取消',
+  4: '待确认取消',
 }
 
 export const TransactionStatusType: Record<number, string> = {
@@ -38,4 +40,5 @@ export const TransactionStatusType: Record<number, string> = {
   1: 'primary',
   2: 'success',
   3: 'info',
+  4: 'danger',
 }

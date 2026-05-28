@@ -61,4 +61,18 @@ public class TransactionController {
         Long userId = (Long) request.getAttribute(AuthInterceptor.USER_ID_HEADER);
         return ApiResponse.success(transactionService.requestCancel(id, userId, reason));
     }
+
+    @PostMapping("/{id}/confirm-cancel")
+    public ApiResponse<TransactionResponse> confirmCancel(@PathVariable("id") Long id,
+                                                           HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        return ApiResponse.success(transactionService.confirmCancel(id, userId));
+    }
+
+    @PostMapping("/{id}/reject-cancel")
+    public ApiResponse<TransactionResponse> rejectCancel(@PathVariable("id") Long id,
+                                                          HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        return ApiResponse.success(transactionService.rejectCancel(id, userId));
+    }
 }
