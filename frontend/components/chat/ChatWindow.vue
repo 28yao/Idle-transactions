@@ -187,6 +187,7 @@ onMounted(fetchMessages)
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .chat-header {
@@ -195,6 +196,7 @@ onMounted(fetchMessages)
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .header-user {
@@ -244,6 +246,7 @@ onMounted(fetchMessages)
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 0;
 }
 
 .loading {
@@ -255,6 +258,7 @@ onMounted(fetchMessages)
 .input-area {
   border-top: 1px solid #ebeef5;
   padding: 12px 20px;
+  flex-shrink: 0;
 }
 
 .input-toolbar {
