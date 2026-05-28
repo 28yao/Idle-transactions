@@ -12,6 +12,7 @@
           <NuxtLink to="/user/transactions" class="nav-item" :class="{ active: route.path.startsWith('/user/transactions') }">交易</NuxtLink>
           <NuxtLink to="/user/listings" class="nav-item" :class="{ active: route.path.startsWith('/user/listings') }">我的发布</NuxtLink>
           <NuxtLink to="/user/favorites" class="nav-item" :class="{ active: route.path.startsWith('/user/favorites') }">收藏</NuxtLink>
+          <NuxtLink v-if="authStore.isAdmin" to="/admin" class="nav-item admin-link" :class="{ active: route.path.startsWith('/admin') }">管理后台</NuxtLink>
         </nav>
         <div class="header-actions">
           <template v-if="authStore.isLoggedIn">
@@ -32,6 +33,7 @@
                   <el-dropdown-item @click="navigateTo('/user/listings')">我的发布</el-dropdown-item>
                   <el-dropdown-item @click="navigateTo('/user/favorites')">我的收藏</el-dropdown-item>
                   <el-dropdown-item @click="navigateTo('/notifications')">通知中心</el-dropdown-item>
+                  <el-dropdown-item v-if="authStore.isAdmin" @click="navigateTo('/admin')">管理后台</el-dropdown-item>
                   <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -144,6 +146,18 @@ onMounted(() => {
 .nav-item.active {
   color: #303133;
   font-weight: 600;
+}
+
+.admin-link {
+  color: #e6a23c;
+}
+
+.admin-link:hover {
+  color: #ebb563;
+}
+
+.admin-link.active {
+  color: #cf9236;
 }
 
 .header-actions {
