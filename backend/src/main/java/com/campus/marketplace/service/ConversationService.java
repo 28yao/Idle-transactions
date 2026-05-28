@@ -81,6 +81,18 @@ public class ConversationService {
         return buildResponse(conv, userId);
     }
 
+    @Transactional
+    public void deleteConversation(Long conversationId, Long userId) {
+        Conversation conv = conversationMapper.selectById(conversationId);
+        if (conv == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND);
+        }
+        if (!conv.getUser1Id().equals(userId) && !conv.getUser2Id().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+        conversationMapper.deleteById(conversationId);
+    }
+
     private ConversationResponse buildResponse(Conversation conv, Long currentUserId) {
         ConversationResponse r = new ConversationResponse();
         r.setId(conv.getId());

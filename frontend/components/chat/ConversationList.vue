@@ -25,6 +25,15 @@
           <span class="conv-message">{{ conv.lastMessage }}</span>
         </div>
       </div>
+      <el-button
+        class="delete-btn"
+        type="danger"
+        text
+        size="small"
+        @click.stop="$emit('delete', conv.id)"
+      >
+        删除
+      </el-button>
     </div>
   </div>
 </template>
@@ -35,7 +44,7 @@ defineProps({
   activeId: { type: Number, default: null },
 })
 
-defineEmits(['select'])
+defineEmits(['select', 'delete'])
 
 const formatTime = (time) => {
   if (!time) return ''
@@ -126,5 +135,14 @@ const formatTime = (time) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.delete-btn {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.conversation-item:hover .delete-btn {
+  opacity: 1;
 }
 </style>

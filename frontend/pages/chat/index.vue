@@ -10,6 +10,7 @@
           :conversations="conversations"
           :active-id="activeConversationId"
           @select="selectConversation"
+          @delete="deleteConversation"
         />
       </div>
 
@@ -85,6 +86,19 @@ const handleOffer = async (messageId, action) => {
     await fetchConversations()
   } catch (e) {
     ElMessage.error(e.message || '操作失败')
+  }
+}
+
+const deleteConversation = async (id) => {
+  try {
+    await $api.delete(`/api/conversations/${id}`)
+    conversations.value = conversations.value.filter(c => c.id !== id)
+    if (activeConversationId.value === id) {
+      activeConversationId.value = null
+    }
+    ElMessage.success('已删除')
+  } catch (e) {
+    ElMessage.error(e.message || '删除失败')
   }
 }
 

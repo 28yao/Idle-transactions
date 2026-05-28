@@ -36,4 +36,12 @@ public class ConversationController {
         Long userId = (Long) request.getAttribute(AuthInterceptor.USER_ID_HEADER);
         return ApiResponse.success(conversationService.getConversation(id, userId));
     }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> delete(@PathVariable("id") Long id,
+                                     HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        conversationService.deleteConversation(id, userId);
+        return ApiResponse.success("删除成功", null);
+    }
 }
