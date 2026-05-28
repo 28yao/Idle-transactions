@@ -1078,39 +1078,39 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F11.1 | 创建通知中心页面 | frontend/pages/notifications.vue | F1.6 | 页面能正常显示 | 未开始 |
-| F11.2 | 创建通知列表组件 | frontend/components/notification/NotificationList.vue | F1.2 | 列表显示正常 | 未开始 |
-| F11.3 | 创建通知项组件 | frontend/components/notification/NotificationItem.vue | F1.2 | 通知项样式正确 | 未开始 |
-| F11.4 | 实现未读角标 | frontend/layouts/default.vue | F11.1 | 角标显示正确 | 未开始 |
+| F11.1 | 创建通知中心页面 | frontend/pages/notifications.vue | F1.6 | 页面能正常显示 | 已完成 |
+| F11.2 | 创建通知列表组件 | frontend/pages/notifications.vue | F1.2 | 列表显示正常 | 已完成 |
+| F11.3 | 创建通知项组件 | frontend/pages/notifications.vue | F1.2 | 通知项样式正确 | 已完成 |
+| F11.4 | 实现未读角标 | frontend/layouts/default.vue | F11.1 | 角标显示正确 | 已完成 |
 
 ### 11.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B11.1 | 创建通知列表接口 | backend/src/main/java/.../controller/NotificationController.java | S1.2 | GET /api/notifications 返回通知列表 | 未开始 |
-| B11.2 | 创建全部已读接口 | backend/src/main/java/.../controller/NotificationController.java | S1.2 | PUT /api/notifications/read-all 返回成功 | 未开始 |
-| B11.3 | 创建标记已读接口 | backend/src/main/java/.../controller/NotificationController.java | S1.2 | PUT /api/notifications/{id}/read 返回成功 | 未开始 |
-| B11.4 | 创建未读数量接口 | backend/src/main/java/.../controller/NotificationController.java | S1.2 | GET /api/notifications/unread-count 返回数量 | 未开始 |
+| B11.1 | 创建通知列表接口 | backend/src/main/java/.../controller/NotificationController.java | S1.2 | GET /api/notifications 返回通知列表 | 已完成 |
+| B11.2 | 创建全部已读接口 | backend/src/main/java/.../controller/NotificationController.java | S1.2 | PUT /api/notifications/read-all 返回成功 | 已完成 |
+| B11.3 | 创建标记已读接口 | backend/src/main/java/.../controller/NotificationController.java | S1.2 | PUT /api/notifications/{id}/read 返回成功 | 已完成 |
+| B11.4 | 创建未读数量接口 | backend/src/main/java/.../controller/NotificationController.java | S1.2 | GET /api/notifications/unread-count 返回数量 | 已完成 |
 
 ### 11.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S11.1 | 实现通知创建逻辑 | backend/src/main/java/.../service/NotificationService.java | M11.1 | 通知创建成功 | 未开始 |
-| S11.2 | 实现通知列表查询 | backend/src/main/java/.../service/NotificationService.java | M11.1 | 列表查询正确 | 未开始 |
-| S11.3 | 实现已读标记逻辑 | backend/src/main/java/.../service/NotificationService.java | M11.1 | 标记成功 | 未开始 |
+| S11.1 | 实现通知创建逻辑 | backend/src/main/java/.../service/NotificationService.java | M11.1 | 通知创建成功 | 已完成 |
+| S11.2 | 实现通知列表查询 | backend/src/main/java/.../service/NotificationService.java | M11.1 | 列表查询正确 | 已完成 |
+| S11.3 | 实现已读标记逻辑 | backend/src/main/java/.../service/NotificationService.java | M11.1 | 标记成功 | 已完成 |
 
 ### 11.7 Mapper 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| M11.1 | 创建NotificationMapper | backend/src/main/java/.../mapper/NotificationMapper.java | M1.1 | 能正常查询通知 | 未开始 |
+| M11.1 | 创建NotificationMapper | backend/src/main/java/.../mapper/NotificationMapper.java | M1.1 | 能正常查询通知 | 已完成 |
 
 ### 11.8 Repository / 数据保存任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| D11.1 | 创建Notification实体类 | backend/src/main/java/.../entity/Notification.java | M1.1 | 字段与数据库对应 | 未开始 |
+| D11.1 | 创建Notification实体类 | backend/src/main/java/.../entity/Notification.java | M1.1 | 字段与数据库对应 | 已完成 |
 
 ### 11.9 页面测试方法
 
@@ -1138,7 +1138,7 @@
 
 ### 11.12 当前状态
 
-- 未开始
+- 已完成
 
 ---
 

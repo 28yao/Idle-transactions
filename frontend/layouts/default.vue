@@ -15,6 +15,11 @@
         </nav>
         <div class="header-actions">
           <template v-if="authStore.isLoggedIn">
+            <el-badge :value="unreadCount" :hidden="unreadCount === 0" :max="99" class="notification-badge">
+              <el-icon :size="20" class="notification-icon" @click="navigateTo('/notifications')">
+                <Bell />
+              </el-icon>
+            </el-badge>
             <el-dropdown>
               <span class="user-info">
                 <el-avatar :size="32" :src="authStore.user?.avatar" />
@@ -47,15 +52,34 @@
 </template>
 
 <script setup>
+import { Bell } from '@element-plus/icons-vue'
 import { useAuthStore } from '~/stores/auth'
 
 const route = useRoute()
 const authStore = useAuthStore()
+const { $api } = useNuxtApp()
+
+const unreadCount = ref(0)
+
+const fetchUnreadCount = async () => {
+  if (!authStore.isLoggedIn) return
+  try {
+    const res = await $api.get('/api/notifications/unread-count')
+    unreadCount.value = res.data || 0
+  } catch (e) {
+    console.error('Failed to fetch unread count:', e)
+  }
+}
 
 const handleLogout = () => {
   authStore.logout()
   navigateTo('/login')
 }
+
+onMounted(fetchUnreadCount)
+
+// 每分钟刷新未读数量
+setInterval(fetchUnreadCount, 60000)
 </script>
 
 <style scoped>
@@ -126,6 +150,20 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.notification-badge {
+  cursor: pointer;
+}
+
+.notification-icon {
+  cursor: pointer;
+  color: #606266;
+  transition: color 0.2s;
+}
+
+.notification-icon:hover {
+  color: #409eff;
 }
 
 .user-info {

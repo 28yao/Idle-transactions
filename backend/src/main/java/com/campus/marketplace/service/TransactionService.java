@@ -32,6 +32,7 @@ public class TransactionService {
     private final ProductMapper productMapper;
     private final UserMapper userMapper;
     private final ReviewMapper reviewMapper;
+    private final NotificationService notificationService;
 
     // 状态常量
     private static final int STATUS_ONGOING = 0;      // 进行中
@@ -78,6 +79,15 @@ public class TransactionService {
         product.setStatus(PRODUCT_SOLD);
         productMapper.updateById(product);
 
+        // 通知卖家有新交易
+        notificationService.createNotification(
+                product.getSellerId(),
+                NotificationService.TYPE_TRANSACTION,
+                "新交易通知",
+                "您的商品「" + product.getTitle() + "」已被购买，请尽快交付",
+                transaction.getId()
+        );
+
         return buildResponse(transaction);
     }
 
@@ -98,6 +108,17 @@ public class TransactionService {
         transaction.setDeliveredAt(LocalDateTime.now());
         transactionMapper.updateById(transaction);
 
+        // 通知买家
+        Product product = productMapper.selectById(transaction.getProductId());
+        String productTitle = product != null ? product.getTitle() : "商品";
+        notificationService.createNotification(
+                transaction.getBuyerId(),
+                NotificationService.TYPE_TRANSACTION,
+                "卖家已交付",
+                "您购买的「" + productTitle + "」卖家已标记交付，请确认收货",
+                transaction.getId()
+        );
+
         return buildResponse(transaction);
     }
 
@@ -117,6 +138,17 @@ public class TransactionService {
         transaction.setStatus(STATUS_COMPLETED);
         transaction.setCompletedAt(LocalDateTime.now());
         transactionMapper.updateById(transaction);
+
+        // 通知卖家交易完成
+        Product product = productMapper.selectById(transaction.getProductId());
+        String productTitle = product != null ? product.getTitle() : "商品";
+        notificationService.createNotification(
+                transaction.getSellerId(),
+                NotificationService.TYPE_TRANSACTION,
+                "交易已完成",
+                "您出售的「" + productTitle + "」买家已确认收货，交易完成",
+                transaction.getId()
+        );
 
         return buildResponse(transaction);
     }
