@@ -16,7 +16,7 @@
           </span>
         </div>
         <el-button
-          v-if="conversation?.productId && !isSeller"
+          v-if="showPurchaseButton"
           type="success"
           size="small"
           @click.stop="confirmPurchase"
@@ -74,7 +74,12 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const isSeller = computed(() => {
-  return authStore.user?.id === props.conversation?.sellerId
+  if (!authStore.user || !props.conversation?.sellerId) return false
+  return authStore.user.id === props.conversation.sellerId
+})
+
+const showPurchaseButton = computed(() => {
+  return authStore.user && props.conversation?.productId && !isSeller.value
 })
 
 const messages = ref([])
