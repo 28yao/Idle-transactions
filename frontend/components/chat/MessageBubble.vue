@@ -28,7 +28,7 @@
       <div class="bubble-time">{{ formatTime(message.createdAt) }}</div>
     </div>
 
-    <el-avatar v-if="isSelf" :size="32" :src="message.senderAvatar">
+    <el-avatar v-if="isSelf" :size="32" :src="message.senderAvatar" class="self-avatar">
       {{ message.senderNickname?.charAt(0) }}
     </el-avatar>
   </div>
@@ -57,7 +57,7 @@ const formatTime = (time) => {
 }
 
 .message-bubble.is-self {
-  flex-direction: row-reverse;
+  justify-content: flex-end;
 }
 
 .bubble-content {
