@@ -46,6 +46,15 @@
 
         <div class="product-actions">
           <el-button
+            v-if="isLoggedIn && !isOwner && product.status === 1"
+            type="primary"
+            size="large"
+            @click="contactSeller"
+          >
+            <el-icon><ChatDotRound /></el-icon>
+            联系卖家
+          </el-button>
+          <el-button
             v-if="isLoggedIn && !isOwner"
             :type="product.favorited ? 'danger' : 'primary'"
             :icon="product.favorited ? StarFilled : Star"
@@ -103,7 +112,7 @@
 
 <script setup>
 import { ElMessage } from 'element-plus'
-import { View, Star, StarFilled, Warning } from '@element-plus/icons-vue'
+import { View, Star, StarFilled, Warning, ChatDotRound } from '@element-plus/icons-vue'
 import ProductImageCarousel from '~/components/product/ImageCarousel.vue'
 import SellerInfo from '~/components/user/SellerInfo.vue'
 import ReportDialog from '~/components/common/ReportDialog.vue'
@@ -167,6 +176,21 @@ const openReport = () => {
 
 const editProduct = () => {
   router.push(`/product/publish?edit=${productId}`)
+}
+
+const contactSeller = async () => {
+  if (!isLoggedIn.value) {
+    ElMessage.warning('请先登录')
+    router.push('/login')
+    return
+  }
+  try {
+    const res = await $api.post(`/api/conversations?productId=${productId}`)
+    const conv = res.data
+    router.push(`/chat?id=${conv.id}`)
+  } catch (e) {
+    ElMessage.error(e.message || '无法发起对话')
+  }
 }
 
 const formatPrice = (price) => {
