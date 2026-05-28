@@ -11,12 +11,15 @@ import com.campus.marketplace.exception.ErrorCode;
 import com.campus.marketplace.mapper.ConversationMapper;
 import com.campus.marketplace.mapper.MessageMapper;
 import com.campus.marketplace.mapper.UserMapper;
+import com.campus.marketplace.websocket.ChatWebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class MessageService {
     private final MessageMapper messageMapper;
     private final ConversationMapper conversationMapper;
     private final UserMapper userMapper;
+    private final ChatWebSocketHandler chatWebSocketHandler;
 
     @Transactional
     public MessageResponse sendMessage(Long senderId, MessageSendRequest request) {
@@ -50,7 +54,15 @@ public class MessageService {
         conv.setLastMessageAt(msg.getCreatedAt());
         conversationMapper.updateById(conv);
 
-        return buildResponse(msg);
+        // 通过 WebSocket 通知对方
+        Long receiverId = conv.getUser1Id().equals(senderId) ? conv.getUser2Id() : conv.getUser1Id();
+        MessageResponse response = buildResponse(msg);
+        Map<String, Object> wsMessage = new HashMap<>();
+        wsMessage.put("type", "new_message");
+        wsMessage.put("data", response);
+        chatWebSocketHandler.sendToUser(receiverId, wsMessage);
+
+        return response;
     }
 
     public List<MessageResponse> getMessages(Long conversationId, Long userId, int limit) {
