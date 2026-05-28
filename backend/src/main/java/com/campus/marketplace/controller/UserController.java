@@ -2,6 +2,7 @@ package com.campus.marketplace.controller;
 
 import com.campus.marketplace.dto.request.VerifyRequest;
 import com.campus.marketplace.dto.response.ApiResponse;
+import com.campus.marketplace.dto.response.UserProfileResponse;
 import com.campus.marketplace.interceptor.AuthInterceptor;
 import com.campus.marketplace.service.FileService;
 import com.campus.marketplace.service.UserService;
@@ -36,5 +37,18 @@ public class UserController {
         Long userId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_HEADER);
         userService.submitVerify(userId, request);
         return ApiResponse.success("提交成功，等待审核", null);
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<UserProfileResponse> getUserProfile(@PathVariable("id") Long id) {
+        return ApiResponse.success(userService.getUserProfile(id));
+    }
+
+    @PutMapping("/profile")
+    public ApiResponse<Void> updateProfile(@RequestBody Map<String, String> body,
+                                           HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_HEADER);
+        userService.updateProfile(userId, body.get("nickname"), body.get("avatar"), body.get("campus"));
+        return ApiResponse.success(null);
     }
 }

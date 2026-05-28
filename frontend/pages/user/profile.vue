@@ -61,6 +61,14 @@ import { ElMessage } from 'element-plus'
 const { $api } = useNuxtApp()
 const token = useCookie('token')
 
+const currentUserId = computed(() => {
+  if (!token.value) return null
+  try {
+    const payload = JSON.parse(atob(token.value.split('.')[1]))
+    return Number(payload.sub)
+  } catch { return null }
+})
+
 const user = ref({})
 const stats = ref({ publishCount: 0, transactionCount: 0, goodRate: null })
 const recentProducts = ref([])
@@ -74,9 +82,23 @@ const fetchProfile = async () => {
   }
 }
 
-const fetchProducts = async () => {
+const fetchStats = async () => {
+  if (!currentUserId.value) return
   try {
-    const res = await $api.get('/api/products', { params: { size: 6 } })
+    const res = await $api.get(`/api/users/${currentUserId.value}`)
+    const data = res.data || {}
+    stats.value = {
+      publishCount: data.publishCount || 0,
+      transactionCount: data.transactionCount || 0,
+      goodRate: data.goodRate != null ? `${data.goodRate}%` : '暂无'
+    }
+  } catch (e) {}
+}
+
+const fetchProducts = async () => {
+  if (!currentUserId.value) return
+  try {
+    const res = await $api.get('/api/products/user', { params: { size: 6 } })
     recentProducts.value = res.data?.records || []
   } catch (e) {}
 }
@@ -87,6 +109,7 @@ onMounted(() => {
     return
   }
   fetchProfile()
+  fetchStats()
   fetchProducts()
 })
 </script>
