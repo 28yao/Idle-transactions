@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     buyer_id BIGINT NOT NULL COMMENT '买家ID',
     seller_id BIGINT NOT NULL COMMENT '卖家ID',
     price DECIMAL(10,2) NOT NULL COMMENT '成交价格',
-    status TINYINT DEFAULT 0 COMMENT '状态：0进行中 1卖家已交付 2已完成 3已取消',
+    status TINYINT DEFAULT 0 COMMENT '状态：0进行中 1卖家已交付 2已完成 3已取消 4待确认取消',
     cancel_reason VARCHAR(255) DEFAULT NULL COMMENT '取消原因',
     cancel_by BIGINT DEFAULT NULL COMMENT '取消发起人',
     delivered_at DATETIME DEFAULT NULL COMMENT '卖家标记交付时间',
@@ -110,7 +110,8 @@ CREATE TABLE IF NOT EXISTS transactions (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     UNIQUE KEY uk_product_id (product_id),
     INDEX idx_buyer_id (buyer_id),
-    INDEX idx_seller_id (seller_id)
+    INDEX idx_seller_id (seller_id),
+    INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='交易表';
 
 -- 评价表
