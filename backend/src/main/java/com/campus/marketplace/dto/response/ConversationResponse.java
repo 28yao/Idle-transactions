@@ -10,6 +10,7 @@ public class ConversationResponse {
 
     private Long id;
     private Long productId;
+    private Long sellerId;
     private String productTitle;
     private String productCover;
     private BigDecimal productPrice;

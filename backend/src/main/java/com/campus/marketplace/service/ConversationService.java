@@ -113,6 +113,7 @@ public class ConversationService {
         // 商品信息
         Product product = productMapper.selectById(conv.getProductId());
         if (product != null) {
+            r.setSellerId(product.getSellerId());
             r.setProductTitle(product.getTitle());
             r.setProductPrice(product.getPrice());
         }
