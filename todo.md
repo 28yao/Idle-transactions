@@ -475,39 +475,39 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F5.1 | 创建首页 | frontend/pages/index.vue | F1.6 | 页面能正常显示 | 未开始 |
-| F5.2 | 创建商品卡片组件 | frontend/components/ProductCard.vue | F1.2 | 卡片显示商品信息 | 未开始 |
-| F5.3 | 创建商品网格组件 | frontend/components/product/ProductGrid.vue | F5.2 | 网格显示多个商品 | 未开始 |
-| F5.4 | 实现搜索功能 | frontend/pages/index.vue | F5.1, B5.2 | 搜索结果正确显示 | 未开始 |
-| F5.5 | 实现分类筛选 | frontend/pages/index.vue | F5.1, B5.2 | 分类筛选生效 | 未开始 |
-| F5.6 | 创建分类页 | frontend/pages/category/[name].vue | F1.6 | 页面能正常显示 | 未开始 |
-| F5.7 | 实现分页功能 | frontend/components/common/Pagination.vue | F1.2 | 分页切换正常 | 未开始 |
+| F5.1 | 创建首页 | frontend/pages/index.vue | F1.6 | 页面能正常显示 | 已完成 |
+| F5.2 | 创建商品卡片组件 | frontend/components/ProductCard.vue | F1.2 | 卡片显示商品信息 | 已完成 |
+| F5.3 | 创建商品网格组件 | frontend/components/product/ProductGrid.vue | F5.2 | 网格显示多个商品 | 已完成 |
+| F5.4 | 实现搜索功能 | frontend/pages/index.vue | F5.1, B5.2 | 搜索结果正确显示 | 已完成 |
+| F5.5 | 实现分类筛选 | frontend/pages/index.vue | F5.1, B5.2 | 分类筛选生效 | 已完成 |
+| F5.6 | 创建分类页 | frontend/pages/category/[name].vue | F1.6 | 页面能正常显示 | 已完成 |
+| F5.7 | 实现分页功能 | frontend/components/common/Pagination.vue | F1.2 | 分页切换正常 | 已完成 |
 
 ### 5.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B5.1 | 创建商品列表接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | GET /api/products 返回商品列表 | 未开始 |
-| B5.2 | 创建商品搜索接口 | backend/src/main/java/.../controller/ProductController.java | S5.1 | GET /api/products?keyword=xxx 返回搜索结果 | 未开始 |
-| B5.3 | 创建商品详情接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | GET /api/products/{id} 返回商品详情 | 未开始 |
-| B5.4 | 创建推荐商品接口 | backend/src/main/java/.../controller/ProductController.java | S5.2 | GET /api/products/recommended 返回推荐列表 | 未开始 |
-| B5.5 | 创建最新商品接口 | backend/src/main/java/.../controller/ProductController.java | S5.2 | GET /api/products/latest 返回最新列表 | 未开始 |
+| B5.1 | 创建商品列表接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | GET /api/products 返回商品列表 | 已完成 |
+| B5.2 | 创建商品搜索接口 | backend/src/main/java/.../controller/ProductController.java | S5.1 | GET /api/products?keyword=xxx 返回搜索结果 | 已完成 |
+| B5.3 | 创建商品详情接口 | backend/src/main/java/.../controller/ProductController.java | S1.2 | GET /api/products/{id} 返回商品详情 | 已完成 |
+| B5.4 | 创建推荐商品接口 | backend/src/main/java/.../controller/ProductController.java | S5.2 | GET /api/products/recommended 返回推荐列表 | 已完成 |
+| B5.5 | 创建最新商品接口 | backend/src/main/java/.../controller/ProductController.java | S5.2 | GET /api/products/latest 返回最新列表 | 已完成 |
 
 ### 5.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S5.1 | 实现商品列表查询 | backend/src/main/java/.../service/ProductService.java | M4.1 | 分页查询正确 | 未开始 |
-| S5.2 | 实现商品搜索逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 关键词搜索正确 | 未开始 |
-| S5.3 | 实现分类筛选逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 分类筛选正确 | 未开始 |
-| S5.4 | 实现排序逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 排序结果正确 | 未开始 |
+| S5.1 | 实现商品列表查询 | backend/src/main/java/.../service/ProductService.java | M4.1 | 分页查询正确 | 已完成 |
+| S5.2 | 实现商品搜索逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 关键词搜索正确 | 已完成 |
+| S5.3 | 实现分类筛选逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 分类筛选正确 | 已完成 |
+| S5.4 | 实现排序逻辑 | backend/src/main/java/.../service/ProductService.java | M4.1 | 排序结果正确 | 已完成 |
 
 ### 5.7 Mapper 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| M5.1 | 添加商品搜索SQL | backend/src/main/resources/mapper/ProductMapper.xml | M4.2 | 搜索SQL正确执行 | 未开始 |
-| M5.2 | 添加商品统计SQL | backend/src/main/resources/mapper/ProductMapper.xml | M4.2 | 统计SQL正确执行 | 未开始 |
+| M5.1 | 添加商品搜索SQL | backend/src/main/resources/mapper/ProductMapper.xml | M4.2 | 搜索SQL正确执行 | 已完成 |
+| M5.2 | 添加商品统计SQL | backend/src/main/resources/mapper/ProductMapper.xml | M4.2 | 统计SQL正确执行 | 已完成 |
 
 ### 5.8 Repository / 数据保存任务
 
@@ -577,43 +577,43 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F6.1 | 创建商品详情页 | frontend/pages/product/[id].vue | F1.6 | 页面能正常显示 | 未开始 |
-| F6.2 | 实现图片轮播组件 | frontend/components/product/ImageCarousel.vue | F1.2 | 图片可左右切换 | 未开始 |
-| F6.3 | 实现收藏功能 | frontend/pages/product/[id].vue | F6.1, B6.2 | 收藏状态切换正常 | 未开始 |
-| F6.4 | 实现举报弹窗 | frontend/components/common/ReportDialog.vue | F1.2 | 弹窗正常显示 | 未开始 |
-| F6.5 | 创建卖家信息组件 | frontend/components/user/SellerInfo.vue | F1.2 | 信息显示正确 | 未开始 |
+| F6.1 | 创建商品详情页 | frontend/pages/product/[id].vue | F1.6 | 页面能正常显示 | 已完成 |
+| F6.2 | 实现图片轮播组件 | frontend/components/product/ImageCarousel.vue | F1.2 | 图片可左右切换 | 已完成 |
+| F6.3 | 实现收藏功能 | frontend/pages/product/[id].vue | F6.1, B6.2 | 收藏状态切换正常 | 已完成 |
+| F6.4 | 实现举报弹窗 | frontend/components/common/ReportDialog.vue | F1.2 | 弹窗正常显示 | 已完成 |
+| F6.5 | 创建卖家信息组件 | frontend/components/user/SellerInfo.vue | F1.2 | 信息显示正确 | 已完成 |
 
 ### 6.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B6.1 | 创建收藏接口 | backend/src/main/java/.../controller/FavoriteController.java | S1.2 | POST /api/favorites/{productId} 返回成功 | 未开始 |
-| B6.2 | 创建取消收藏接口 | backend/src/main/java/.../controller/FavoriteController.java | S1.2 | DELETE /api/favorites/{productId} 返回成功 | 未开始 |
-| B6.3 | 创建举报接口 | backend/src/main/java/.../controller/ReportController.java | S1.2 | POST /api/reports 返回成功 | 未开始 |
-| B6.4 | 更新商品浏览量 | backend/src/main/java/.../controller/ProductController.java | S1.2 | 浏览量+1 | 未开始 |
+| B6.1 | 创建收藏接口 | backend/src/main/java/.../controller/FavoriteController.java | S1.2 | POST /api/favorites/{productId} 返回成功 | 已完成 |
+| B6.2 | 创建取消收藏接口 | backend/src/main/java/.../controller/FavoriteController.java | S1.2 | DELETE /api/favorites/{productId} 返回成功 | 已完成 |
+| B6.3 | 创建举报接口 | backend/src/main/java/.../controller/ReportController.java | S1.2 | POST /api/reports 返回成功 | 已完成 |
+| B6.4 | 更新商品浏览量 | backend/src/main/java/.../controller/ProductController.java | S1.2 | 浏览量+1 | 已完成 |
 
 ### 6.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S6.1 | 实现收藏逻辑 | backend/src/main/java/.../service/FavoriteService.java | M6.1 | 收藏成功 | 未开始 |
-| S6.2 | 实现举报逻辑 | backend/src/main/java/.../service/ReportService.java | M6.2 | 举报成功 | 未开始 |
-| S6.3 | 实现浏览量统计 | backend/src/main/java/.../service/ProductService.java | M4.1 | 浏览量正确累加 | 未开始 |
+| S6.1 | 实现收藏逻辑 | backend/src/main/java/.../service/FavoriteService.java | M6.1 | 收藏成功 | 已完成 |
+| S6.2 | 实现举报逻辑 | backend/src/main/java/.../service/ReportService.java | M6.2 | 举报成功 | 已完成 |
+| S6.3 | 实现浏览量统计 | backend/src/main/java/.../service/ProductService.java | M4.1 | 浏览量正确累加 | 已完成 |
 
 ### 6.7 Mapper 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| M6.1 | 创建FavoriteMapper | backend/src/main/java/.../mapper/FavoriteMapper.java | M1.1 | 能正常查询收藏 | 未开始 |
-| M6.2 | 创建ReportMapper | backend/src/main/java/.../mapper/ReportMapper.java | M1.1 | 能正常查询举报 | 未开始 |
+| M6.1 | 创建FavoriteMapper | backend/src/main/java/.../mapper/FavoriteMapper.java | M1.1 | 能正常查询收藏 | 已完成 |
+| M6.2 | 创建ReportMapper | backend/src/main/java/.../mapper/ReportMapper.java | M1.1 | 能正常查询举报 | 已完成 |
 
 ### 6.8 Repository / 数据保存任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| D6.1 | 创建Favorite实体类 | backend/src/main/java/.../entity/Favorite.java | M1.1 | 字段与数据库对应 | 未开始 |
-| D6.2 | 创建Report实体类 | backend/src/main/java/.../entity/Report.java | M1.1 | 字段与数据库对应 | 未开始 |
-| D6.3 | 创建举报请求DTO | backend/src/main/java/.../dto/request/ReportRequest.java | 无 | 字段验证生效 | 未开始 |
+| D6.1 | 创建Favorite实体类 | backend/src/main/java/.../entity/Favorite.java | M1.1 | 字段与数据库对应 | 已完成 |
+| D6.2 | 创建Report实体类 | backend/src/main/java/.../entity/Report.java | M1.1 | 字段与数据库对应 | 已完成 |
+| D6.3 | 创建举报请求DTO | backend/src/main/java/.../dto/request/ReportRequest.java | 无 | 字段验证生效 | 已完成 |
 
 ### 6.9 页面测试方法
 
@@ -646,7 +646,7 @@
 
 ### 6.12 当前状态
 
-- 未开始
+- 已完成
 
 ---
 
@@ -683,47 +683,47 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F7.1 | 创建私信页面 | frontend/pages/chat/index.vue | F1.6 | 页面能正常显示 | 未开始 |
-| F7.2 | 创建会话列表组件 | frontend/components/chat/ConversationList.vue | F1.2 | 列表显示正常 | 未开始 |
-| F7.3 | 创建聊天窗口组件 | frontend/components/chat/ChatWindow.vue | F1.2 | 窗口显示正常 | 未开始 |
-| F7.4 | 创建消息气泡组件 | frontend/components/chat/MessageBubble.vue | F1.2 | 气泡样式正确 | 未开始 |
-| F7.5 | 实现WebSocket连接 | frontend/plugins/websocket.ts | F1.1 | 连接成功 | 未开始 |
-| F7.6 | 实现实时消息接收 | frontend/composables/useChat.ts | F7.5 | 消息实时显示 | 未开始 |
-| F7.7 | 实现图片消息发送 | frontend/components/chat/ChatWindow.vue | F7.3 | 图片发送成功 | 未开始 |
+| F7.1 | 创建私信页面 | frontend/pages/chat/index.vue | F1.6 | 页面能正常显示 | 已完成 |
+| F7.2 | 创建会话列表组件 | frontend/components/chat/ConversationList.vue | F1.2 | 列表显示正常 | 已完成 |
+| F7.3 | 创建聊天窗口组件 | frontend/components/chat/ChatWindow.vue | F1.2 | 窗口显示正常 | 已完成 |
+| F7.4 | 创建消息气泡组件 | frontend/components/chat/MessageBubble.vue | F1.2 | 气泡样式正确 | 已完成 |
+| F7.5 | 实现WebSocket连接 | frontend/plugins/websocket.ts | F1.1 | 连接成功 | 已完成 |
+| F7.6 | 实现实时消息接收 | frontend/composables/useChat.ts | F7.5 | 消息实时显示 | 已完成 |
+| F7.7 | 实现图片消息发送 | frontend/components/chat/ChatWindow.vue | F7.3 | 图片发送成功 | 已完成 |
 
 ### 7.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B7.1 | 创建会话列表接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | GET /api/conversations 返回会话列表 | 未开始 |
-| B7.2 | 创建会话详情接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | GET /api/conversations/{id} 返回会话详情 | 未开始 |
-| B7.3 | 创建消息历史接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | GET /api/conversations/{id}/messages 返回消息列表 | 未开始 |
-| B7.4 | 创建发送消息接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | POST /api/conversations/{id}/messages 返回消息 | 未开始 |
-| B7.5 | 创建WebSocket端点 | backend/src/main/java/.../websocket/ChatWebSocketHandler.java | S1.1 | WebSocket连接成功 | 未开始 |
+| B7.1 | 创建会话列表接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | GET /api/conversations 返回会话列表 | 已完成 |
+| B7.2 | 创建会话详情接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | GET /api/conversations/{id} 返回会话详情 | 已完成 |
+| B7.3 | 创建消息历史接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | GET /api/conversations/{id}/messages 返回消息列表 | 已完成 |
+| B7.4 | 创建发送消息接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | POST /api/conversations/{id}/messages 返回消息 | 已完成 |
+| B7.5 | 创建WebSocket端点 | backend/src/main/java/.../websocket/ChatWebSocketHandler.java | S1.1 | WebSocket连接成功 | 已完成 |
 
 ### 7.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S7.1 | 实现会话管理逻辑 | backend/src/main/java/.../service/MessageService.java | M7.1 | 会话创建成功 | 未开始 |
-| S7.2 | 实现消息发送逻辑 | backend/src/main/java/.../service/MessageService.java | M7.2 | 消息保存成功 | 未开始 |
-| S7.3 | 实现WebSocket推送 | backend/src/main/java/.../websocket/ChatWebSocketHandler.java | S7.2 | 消息实时推送 | 未开始 |
-| S7.4 | 实现未读消息统计 | backend/src/main/java/.../service/MessageService.java | M7.2 | 统计正确 | 未开始 |
+| S7.1 | 实现会话管理逻辑 | backend/src/main/java/.../service/MessageService.java | M7.1 | 会话创建成功 | 已完成 |
+| S7.2 | 实现消息发送逻辑 | backend/src/main/java/.../service/MessageService.java | M7.2 | 消息保存成功 | 已完成 |
+| S7.3 | 实现WebSocket推送 | backend/src/main/java/.../websocket/ChatWebSocketHandler.java | S7.2 | 消息实时推送 | 已完成 |
+| S7.4 | 实现未读消息统计 | backend/src/main/java/.../service/MessageService.java | M7.2 | 统计正确 | 已完成 |
 
 ### 7.7 Mapper 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| M7.1 | 创建ConversationMapper | backend/src/main/java/.../mapper/ConversationMapper.java | M1.1 | 能正常查询会话 | 未开始 |
-| M7.2 | 创建MessageMapper | backend/src/main/java/.../mapper/MessageMapper.java | M1.1 | 能正常查询消息 | 未开始 |
+| M7.1 | 创建ConversationMapper | backend/src/main/java/.../mapper/ConversationMapper.java | M1.1 | 能正常查询会话 | 已完成 |
+| M7.2 | 创建MessageMapper | backend/src/main/java/.../mapper/MessageMapper.java | M1.1 | 能正常查询消息 | 已完成 |
 
 ### 7.8 Repository / 数据保存任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| D7.1 | 创建Conversation实体类 | backend/src/main/java/.../entity/Conversation.java | M1.1 | 字段与数据库对应 | 未开始 |
-| D7.2 | 创建Message实体类 | backend/src/main/java/.../entity/Message.java | M1.1 | 字段与数据库对应 | 未开始 |
-| D7.3 | 创建消息发送请求DTO | backend/src/main/java/.../dto/request/MessageSendRequest.java | 无 | 字段验证生效 | 未开始 |
+| D7.1 | 创建Conversation实体类 | backend/src/main/java/.../entity/Conversation.java | M1.1 | 字段与数据库对应 | 已完成 |
+| D7.2 | 创建Message实体类 | backend/src/main/java/.../entity/Message.java | M1.1 | 字段与数据库对应 | 已完成 |
+| D7.3 | 创建消息发送请求DTO | backend/src/main/java/.../dto/request/MessageSendRequest.java | 无 | 字段验证生效 | 已完成 |
 
 ### 7.9 页面测试方法
 
@@ -752,7 +752,7 @@
 
 ### 7.12 当前状态
 
-- 未开始
+- 已完成
 
 ---
 
@@ -1652,4 +1652,4 @@
 
 ---
 
-**最后更新：** 2026-05-27
+**最后更新：** 2026-05-28
