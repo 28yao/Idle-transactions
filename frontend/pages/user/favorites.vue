@@ -9,7 +9,7 @@
 
     <div v-else class="product-grid">
       <div v-for="p in favorites" :key="p.id" class="product-card" @click="navigateTo(`/product/${p.id}`)">
-        <div class="card-cover" :style="{ backgroundImage: `url(${p.coverImage})` }">
+        <div class="card-cover" :style="{ backgroundImage: `url(${resolveUrl(p.coverImage)})` }">
           <el-tag v-if="p.status === 2" type="danger" size="small" class="sold-tag">已售</el-tag>
         </div>
         <div class="card-body">
@@ -38,9 +38,16 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const { $api } = useNuxtApp()
+const config = useRuntimeConfig()
 const token = useCookie('token')
 
 const favorites = ref([])
+
+const resolveUrl = (url) => {
+  if (!url) return ''
+  if (url.startsWith('http')) return url
+  return `${config.public.apiBase}${url}`
+}
 
 const fetchFavorites = async () => {
   try {

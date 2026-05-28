@@ -18,7 +18,7 @@
 
     <div v-else class="product-list">
       <div v-for="p in products" :key="p.id" class="product-item">
-        <div class="product-cover" :style="{ backgroundImage: `url(${p.coverImage})` }" />
+        <div class="product-cover" :style="{ backgroundImage: `url(${resolveUrl(p.coverImage)})` }" />
         <div class="product-info">
           <h3 class="product-title">{{ p.title }}</h3>
           <div class="product-price">¥{{ p.price }}</div>
@@ -45,10 +45,17 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const { $api } = useNuxtApp()
+const config = useRuntimeConfig()
 const token = useCookie('token')
 
 const activeTab = ref('1')
 const products = ref([])
+
+const resolveUrl = (url) => {
+  if (!url) return ''
+  if (url.startsWith('http')) return url
+  return `${config.public.apiBase}${url}`
+}
 
 const fetchProducts = async () => {
   try {
