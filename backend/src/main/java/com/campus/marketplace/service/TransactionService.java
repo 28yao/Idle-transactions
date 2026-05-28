@@ -50,7 +50,7 @@ public class TransactionService {
         if (product.getStatus() == null || product.getStatus() != PRODUCT_ON_SALE) {
             throw new BusinessException(ErrorCode.PRODUCT_STATUS_ERROR.getCode(), "商品已售出或不可购买");
         }
-        if (product.getSellerId().equals(buyerId)) {
+        if (buyerId.equals(product.getSellerId())) {
             throw new BusinessException(ErrorCode.BAD_REQUEST.getCode(), "不能购买自己的商品");
         }
 
