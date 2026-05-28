@@ -32,7 +32,7 @@
 
         <div class="card-body">
           <div class="product-info">
-            <div class="product-image" :style="t.productImage ? { backgroundImage: `url(${t.productImage})` } : {}">
+            <div class="product-image" :style="t.productImage ? { backgroundImage: `url(${resolveUrl(t.productImage)})` } : {}">
               <el-icon v-if="!t.productImage" class="image-placeholder"><Picture /></el-icon>
             </div>
             <div class="product-detail">
@@ -168,8 +168,15 @@ import { TransactionStatusLabel, TransactionStatusType } from '~/types/transacti
 import ReviewDialog from '~/components/review/ReviewDialog.vue'
 
 const { $api } = useNuxtApp()
+const config = useRuntimeConfig()
 const token = useCookie('token')
 const authStore = useAuthStore()
+
+const resolveUrl = (url) => {
+  if (!url) return ''
+  if (url.startsWith('http')) return url
+  return `${config.public.apiBase}${url}`
+}
 
 // 从 token 获取当前用户 ID（同步）
 const currentUserId = computed(() => {

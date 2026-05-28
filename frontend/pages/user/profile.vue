@@ -44,7 +44,7 @@
       <div v-if="recentProducts.length === 0" class="empty">暂无发布</div>
       <div v-else class="product-grid">
         <div v-for="p in recentProducts" :key="p.id" class="product-item" @click="navigateTo(`/product/${p.id}`)">
-          <div class="product-cover" :style="{ backgroundImage: `url(${p.coverImage})` }" />
+          <div class="product-cover" :style="{ backgroundImage: `url(${resolveUrl(p.coverImage)})` }" />
           <div class="product-info">
             <div class="product-title">{{ p.title }}</div>
             <div class="product-price">¥{{ p.price }}</div>
@@ -59,7 +59,14 @@
 import { ElMessage } from 'element-plus'
 
 const { $api } = useNuxtApp()
+const config = useRuntimeConfig()
 const token = useCookie('token')
+
+const resolveUrl = (url) => {
+  if (!url) return ''
+  if (url.startsWith('http')) return url
+  return `${config.public.apiBase}${url}`
+}
 
 const currentUserId = computed(() => {
   if (!token.value) return null
