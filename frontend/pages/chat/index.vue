@@ -22,7 +22,6 @@
           :conversation-id="activeConversationId"
           :conversation="activeConversation"
           @send="sendMessage"
-          @offer="handleOffer"
         />
         <div v-else class="empty-chat">
           <el-icon :size="64" color="#c0c4cc"><ChatDotRound /></el-icon>
@@ -65,33 +64,16 @@ const selectConversation = (id) => {
   activeConversationId.value = id
 }
 
-const sendMessage = async (content, type = 1, priceOffer = null) => {
+const sendMessage = async (content) => {
   if (!activeConversationId.value) return
   try {
     await $api.post('/api/messages', {
       conversationId: activeConversationId.value,
       content,
-      type,
-      priceOffer,
     })
-    // 刷新会话列表
     await fetchConversations()
   } catch (e) {
     ElMessage.error(e.message || '发送失败')
-  }
-}
-
-const handleOffer = async (messageId, action) => {
-  try {
-    await $api.post(`/api/messages/${messageId}/offer`, { action })
-    ElMessage.success(action === 1 ? '已接受' : '已拒绝')
-    await fetchConversations()
-  } catch (e) {
-    // 失败时回滚：重新加载消息
-    if (chatWindowRef.value) {
-      chatWindowRef.value.fetchMessages()
-    }
-    ElMessage.error(e.message || '操作失败')
   }
 }
 
@@ -124,20 +106,9 @@ const connectWebSocket = () => {
     try {
       const data = JSON.parse(event.data)
       if (data.type === 'new_message') {
-        console.log('New message for conversation:', data.data?.conversationId, 'Active:', activeConversationId.value)
-        // 新消息到达，刷新会话列表
         fetchConversations()
-        // 如果是当前会话的消息，添加到聊天窗口
         if (data.data && data.data.conversationId === activeConversationId.value && chatWindowRef.value) {
-          console.log('Adding message to chat window')
           chatWindowRef.value.addMessage(data.data)
-        }
-      } else if (data.type === 'offer_update') {
-        // 出价状态更新，刷新会话列表
-        fetchConversations()
-        // 如果是当前会话的消息，更新聊天窗口中的消息状态
-        if (data.data && data.data.conversationId === activeConversationId.value && chatWindowRef.value) {
-          chatWindowRef.value.updateMessage(data.data)
         }
       }
     } catch (e) {

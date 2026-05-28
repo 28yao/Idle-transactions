@@ -26,18 +26,11 @@
         :key="msg.id"
         :message="msg"
         :is-self="msg.senderId === currentUserId"
-        @accept-offer="handleAcceptReject(msg, 1)"
-        @reject-offer="handleAcceptReject(msg, 2)"
       />
     </div>
 
     <!-- 输入区域 -->
     <div class="input-area">
-      <div class="input-toolbar">
-        <el-tooltip content="出价">
-          <el-button :icon="Money" circle size="small" @click="showOfferDialog = true" />
-        </el-tooltip>
-      </div>
       <div class="input-row">
         <el-input
           v-model="inputText"
@@ -51,28 +44,11 @@
         </el-button>
       </div>
     </div>
-
-    <!-- 出价弹窗 -->
-    <el-dialog v-model="showOfferDialog" title="出价" width="400px">
-      <el-form>
-        <el-form-item label="期望价格">
-          <el-input-number v-model="offerPrice" :min="0" :precision="2" :step="10" />
-        </el-form-item>
-        <el-form-item label="留言">
-          <el-input v-model="offerMessage" type="textarea" placeholder="说点什么..." />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="showOfferDialog = false">取消</el-button>
-        <el-button type="primary" @click="sendOffer">发送出价</el-button>
-      </template>
-    </el-dialog>
-
   </div>
 </template>
 
 <script setup>
-import { Loading, Money } from '@element-plus/icons-vue'
+import { Loading } from '@element-plus/icons-vue'
 import MessageBubble from './MessageBubble.vue'
 
 const props = defineProps({
@@ -80,7 +56,7 @@ const props = defineProps({
   conversation: { type: Object, default: null },
 })
 
-const emit = defineEmits(['send', 'offer', 'offer-action'])
+const emit = defineEmits(['send'])
 
 const { $api } = useNuxtApp()
 const router = useRouter()
@@ -89,9 +65,6 @@ const messages = ref([])
 const loading = ref(false)
 const inputText = ref('')
 const messageListRef = ref(null)
-const showOfferDialog = ref(false)
-const offerPrice = ref(0)
-const offerMessage = ref('')
 
 // 从 token 获取当前用户 ID
 const currentUserId = computed(() => {
@@ -136,41 +109,10 @@ const sendText = () => {
   nextTick(scrollToBottom)
 }
 
-const sendOffer = () => {
-  if (offerPrice.value <= 0) return
-  const msg = offerMessage.value.trim() || `我出价 ¥${offerPrice.value}`
-  emit('send', msg, 3, offerPrice.value)
-  messages.value.push({
-    id: Date.now(),
-    senderId: currentUserId.value,
-    senderNickname: '我',
-    content: msg,
-    type: 3,
-    priceOffer: offerPrice.value,
-    offerStatus: 0,
-    createdAt: new Date().toISOString(),
-  })
-  showOfferDialog.value = false
-  offerPrice.value = 0
-  offerMessage.value = ''
-  nextTick(scrollToBottom)
-}
-
 const goProduct = () => {
   if (props.conversation?.productId) {
     router.push(`/product/${props.conversation.productId}`)
   }
-}
-
-const handleAcceptReject = (msg, action) => {
-  // 乐观更新：立即修改本地消息状态
-  const index = messages.value.findIndex(m => m.id === msg.id)
-  if (index !== -1) {
-    const updated = { ...messages.value[index], offerStatus: action }
-    messages.value.splice(index, 1, updated)
-  }
-  // 通知父组件调用 API
-  emit('offer', msg.id, action)
 }
 
 const scrollToBottom = () => {
@@ -181,24 +123,14 @@ const scrollToBottom = () => {
 
 // 添加新消息（供父组件调用）
 const addMessage = (msg) => {
-  // 避免重复添加
   if (!messages.value.some(m => m.id === msg.id)) {
     messages.value.push(msg)
     nextTick(scrollToBottom)
   }
 }
 
-// 更新消息状态（供父组件调用，用于出价状态更新）
-const updateMessage = (msg) => {
-  const index = messages.value.findIndex(m => m.id === msg.id)
-  if (index !== -1) {
-    const updated = { ...messages.value[index], ...msg }
-    messages.value.splice(index, 1, updated)
-  }
-}
-
 // 暴露方法给父组件
-defineExpose({ addMessage, updateMessage, fetchMessages })
+defineExpose({ addMessage, fetchMessages })
 
 watch(() => props.conversationId, fetchMessages)
 
@@ -282,10 +214,6 @@ onMounted(fetchMessages)
   border-top: 1px solid #ebeef5;
   padding: 12px 20px;
   flex-shrink: 0;
-}
-
-.input-toolbar {
-  margin-bottom: 8px;
 }
 
 .input-row {
