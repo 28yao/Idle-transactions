@@ -59,15 +59,13 @@ public class ConversationService {
 
     public List<ConversationResponse> listConversations(Long userId) {
         LambdaQueryWrapper<Conversation> w = new LambdaQueryWrapper<>();
-        w.eq(Conversation::getUser1Id, userId).or().eq(Conversation::getUser2Id, userId);
+        w.and(q -> q.eq(Conversation::getUser1Id, userId).or().eq(Conversation::getUser2Id, userId));
         w.orderByDesc(Conversation::getLastMessageAt);
         List<Conversation> list = conversationMapper.selectList(w);
 
         List<ConversationResponse> result = new ArrayList<>();
         for (Conversation conv : list) {
-            if (conv.getLastMessageAt() != null) {
-                result.add(buildResponse(conv, userId));
-            }
+            result.add(buildResponse(conv, userId));
         }
         return result;
     }
