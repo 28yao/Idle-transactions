@@ -15,6 +15,7 @@
         <div v-if="message.offerStatus === 0 && !isSelf" class="offer-actions">
           <el-button size="small" type="success" @click="$emit('accept-offer')">接受</el-button>
           <el-button size="small" type="danger" @click="$emit('reject-offer')">拒绝</el-button>
+          <el-button v-if="message.type === 3" size="small" type="warning" @click="$emit('counter-offer')">还价</el-button>
         </div>
         <div v-if="message.offerStatus === 1" class="offer-status accepted">已接受</div>
         <div v-if="message.offerStatus === 2" class="offer-status rejected">已拒绝</div>
@@ -40,7 +41,7 @@ defineProps({
   isSelf: { type: Boolean, default: false },
 })
 
-defineEmits(['accept-offer', 'reject-offer'])
+defineEmits(['accept-offer', 'reject-offer', 'counter-offer'])
 
 const formatTime = (time) => {
   if (!time) return ''

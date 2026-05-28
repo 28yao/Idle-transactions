@@ -28,6 +28,7 @@
         :is-self="msg.senderId === currentUserId"
         @accept-offer="$emit('offer', msg.id, 1)"
         @reject-offer="$emit('offer', msg.id, 2)"
+        @counter-offer="showCounterOfferDialog(msg)"
       />
     </div>
 
@@ -67,6 +68,22 @@
         <el-button type="primary" @click="sendOffer">发送出价</el-button>
       </template>
     </el-dialog>
+
+    <!-- 还价弹窗 -->
+    <el-dialog v-model="showCounterOfferDialogVisible" title="还价" width="400px">
+      <el-form>
+        <el-form-item label="还价价格">
+          <el-input-number v-model="counterOfferPrice" :min="0" :precision="2" :step="10" />
+        </el-form-item>
+        <el-form-item label="留言">
+          <el-input v-model="counterOfferMessage" type="textarea" placeholder="说点什么..." />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showCounterOfferDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="sendCounterOffer">发送还价</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -91,6 +108,10 @@ const messageListRef = ref(null)
 const showOfferDialog = ref(false)
 const offerPrice = ref(0)
 const offerMessage = ref('')
+const showCounterOfferDialogVisible = ref(false)
+const counterOfferPrice = ref(0)
+const counterOfferMessage = ref('')
+const counterOfferMessageId = ref(null)
 
 // 从 token 获取当前用户 ID
 const currentUserId = computed(() => {
@@ -161,6 +182,34 @@ const goProduct = () => {
   }
 }
 
+const showCounterOfferDialog = (msg) => {
+  counterOfferMessageId.value = msg.id
+  counterOfferPrice.value = msg.priceOffer || 0
+  counterOfferMessage.value = ''
+  showCounterOfferDialogVisible.value = true
+}
+
+const sendCounterOffer = () => {
+  if (counterOfferPrice.value <= 0) return
+  const msg = counterOfferMessage.value.trim() || `我还价 ¥${counterOfferPrice.value}`
+  emit('send', msg, 4, counterOfferPrice.value)
+  messages.value.push({
+    id: Date.now(),
+    senderId: currentUserId.value,
+    senderNickname: '我',
+    content: msg,
+    type: 4,
+    priceOffer: counterOfferPrice.value,
+    offerStatus: 0,
+    createdAt: new Date().toISOString(),
+  })
+  showCounterOfferDialogVisible.value = false
+  counterOfferPrice.value = 0
+  counterOfferMessage.value = ''
+  counterOfferMessageId.value = null
+  nextTick(scrollToBottom)
+}
+
 const scrollToBottom = () => {
   if (messageListRef.value) {
     messageListRef.value.scrollTop = messageListRef.value.scrollHeight
@@ -176,8 +225,16 @@ const addMessage = (msg) => {
   }
 }
 
+// 更新消息状态（供父组件调用，用于出价状态更新）
+const updateMessage = (msg) => {
+  const index = messages.value.findIndex(m => m.id === msg.id)
+  if (index !== -1) {
+    messages.value[index] = { ...messages.value[index], ...msg }
+  }
+}
+
 // 暴露方法给父组件
-defineExpose({ addMessage })
+defineExpose({ addMessage, updateMessage })
 
 watch(() => props.conversationId, fetchMessages)
 

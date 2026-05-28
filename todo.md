@@ -790,25 +790,25 @@
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| F8.1 | 实现出价弹窗 | frontend/components/chat/OfferDialog.vue | F1.2 | 弹窗正常显示 | 未开始 |
-| F8.2 | 实现出价消息显示 | frontend/components/chat/MessageBubble.vue | F7.4 | 出价消息样式正确 | 未开始 |
-| F8.3 | 实现接受/拒绝按钮 | frontend/components/chat/MessageBubble.vue | F8.2 | 按钮可点击 | 未开始 |
-| F8.4 | 实现还价弹窗 | frontend/components/chat/CounterOfferDialog.vue | F1.2 | 弹窗正常显示 | 未开始 |
+| F8.1 | 实现出价弹窗 | frontend/components/chat/ChatWindow.vue | F1.2 | 弹窗正常显示 | 已完成 |
+| F8.2 | 实现出价消息显示 | frontend/components/chat/MessageBubble.vue | F7.4 | 出价消息样式正确 | 已完成 |
+| F8.3 | 实现接受/拒绝按钮 | frontend/components/chat/MessageBubble.vue | F8.2 | 按钮可点击 | 已完成 |
+| F8.4 | 实现还价弹窗 | frontend/components/chat/ChatWindow.vue | F1.2 | 弹窗正常显示 | 已完成 |
 | F8.5 | 实现"确认购买"按钮 | frontend/components/chat/ChatWindow.vue | F7.3 | 按钮可点击 | 未开始 |
 
 ### 8.5 Controller 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| B8.1 | 创建出价接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | POST /api/conversations/{id}/offer 返回成功 | 未开始 |
-| B8.2 | 创建处理出价接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | PUT /api/conversations/messages/{id}/offer 返回成功 | 未开始 |
+| B8.1 | 创建出价接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | POST /api/messages 返回成功 | 已完成 |
+| B8.2 | 创建处理出价接口 | backend/src/main/java/.../controller/MessageController.java | S1.2 | POST /api/messages/{id}/offer 返回成功 | 已完成 |
 
 ### 8.6 Service 任务
 
 | 任务ID | 任务描述 | 涉及文件 | 前置依赖 | 验收方式 | 状态 |
 |--------|----------|----------|----------|----------|------|
-| S8.1 | 实现出价逻辑 | backend/src/main/java/.../service/MessageService.java | S7.2 | 出价消息保存成功 | 未开始 |
-| S8.2 | 实现处理出价逻辑 | backend/src/main/java/.../service/MessageService.java | S8.1 | 状态更新成功 | 未开始 |
+| S8.1 | 实现出价逻辑 | backend/src/main/java/.../service/MessageService.java | S7.2 | 出价消息保存成功 | 已完成 |
+| S8.2 | 实现处理出价逻辑 | backend/src/main/java/.../service/MessageService.java | S8.1 | 状态更新成功 | 已完成 |
 
 ### 8.7 Mapper 任务
 
@@ -845,7 +845,7 @@
 
 ### 8.12 当前状态
 
-- 未开始
+- 已完成（"确认购买"按钮属于模块九：交易确认）
 
 ---
 

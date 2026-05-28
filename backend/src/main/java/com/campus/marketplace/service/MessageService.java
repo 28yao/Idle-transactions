@@ -46,7 +46,7 @@ public class MessageService {
         msg.setContent(request.getContent());
         msg.setType(request.getType() == null ? 1 : request.getType());
         msg.setPriceOffer(request.getPriceOffer());
-        msg.setOfferStatus(null);
+        msg.setOfferStatus(0);
         messageMapper.insert(msg);
 
         // 更新会话最后消息
@@ -114,7 +114,14 @@ public class MessageService {
         msg.setOfferStatus(action); // 1接受 2拒绝
         messageMapper.updateById(msg);
 
-        return buildResponse(msg);
+        // 通过 WebSocket 通知出价方
+        MessageResponse response = buildResponse(msg);
+        Map<String, Object> wsMessage = new HashMap<>();
+        wsMessage.put("type", "offer_update");
+        wsMessage.put("data", response);
+        chatWebSocketHandler.sendToUser(msg.getSenderId(), wsMessage);
+
+        return response;
     }
 
     private MessageResponse buildResponse(Message msg) {

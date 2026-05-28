@@ -128,6 +128,13 @@ const connectWebSocket = () => {
           console.log('Adding message to chat window')
           chatWindowRef.value.addMessage(data.data)
         }
+      } else if (data.type === 'offer_update') {
+        // 出价状态更新，刷新会话列表
+        fetchConversations()
+        // 如果是当前会话的消息，更新聊天窗口中的消息状态
+        if (data.data && data.data.conversationId === activeConversationId.value && chatWindowRef.value) {
+          chatWindowRef.value.updateMessage(data.data)
+        }
       }
     } catch (e) {
       console.error('WebSocket message parse error:', e)
