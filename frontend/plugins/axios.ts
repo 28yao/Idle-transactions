@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
-  const token = useCookie('token')
+  const token = useCookie('token', { maxAge: 60 * 60 * 24 * 7 })
 
   const api = axios.create({
     baseURL: config.public.apiBase,

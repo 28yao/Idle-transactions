@@ -68,12 +68,12 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.user = null
       this.token = null
-      const tokenCookie = useCookie('token')
+      const tokenCookie = useCookie('token', { maxAge: 60 * 60 * 24 * 7 })
       tokenCookie.value = null
     },
 
     init() {
-      const tokenCookie = useCookie('token')
+      const tokenCookie = useCookie('token', { maxAge: 60 * 60 * 24 * 7 })
       if (tokenCookie.value) {
         this.token = tokenCookie.value
         this.fetchUser()
