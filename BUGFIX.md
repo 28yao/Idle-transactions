@@ -1,6 +1,78 @@
 # 校园二手平台 - 问题修复记录
 
-上一次任务出现
+## 本次任务出现的问题（2026-05-28）
+
+### 9.1 导航栏链接 404
+
+**现象**: 点击导航栏"消息"、"我的发布"、"收藏"、"个人主页"返回 404
+**原因**: 导航栏链接指向的页面不存在（`/messages`、`/user/listings`、`/user/favorites`、`/user/profile`）
+**修复**:
+- 修正"消息"链接：`/messages` → `/chat`
+- 创建缺失页面：`user/profile.vue`、`user/listings.vue`、`user/favorites.vue`
+
+### 9.2 登录状态容易丢失
+
+**现象**: 频繁出现"未登录或登录已过期"
+**原因**: `useCookie('token')` 在 axios 插件和 auth store 中没有统一设置 `maxAge`，导致 cookie 在浏览器关闭后丢失
+**修复**: 所有 `useCookie('token')` 调用统一添加 `maxAge: 60 * 60 * 24 * 7`（7天）
+
+```typescript
+// 修复前
+const token = useCookie('token')
+
+// 修复后
+const token = useCookie('token', { maxAge: 60 * 60 * 24 * 7 })
+```
+
+### 9.3 联系卖家后会话列表为空
+
+**现象**: 点击"联系卖家"跳转到消息页，但会话列表为空
+**原因**: `listConversations` 过滤掉了 `lastMessageAt` 为 null 的会话，而新创建的会话还没有消息
+**修复**: 移除过滤条件，显示所有会话
+
+```java
+// 修复前
+for (Conversation conv : list) {
+    if (conv.getLastMessageAt() != null) {
+        result.add(buildResponse(conv, userId));
+    }
+}
+
+// 修复后
+for (Conversation conv : list) {
+    result.add(buildResponse(conv, userId));
+}
+```
+
+### 9.4 从商品详情页点击联系卖家后不会自动选中会话
+
+**现象**: 点击"联系卖家"跳转到 `/chat?id=123`，但聊天页面不会自动选中该会话
+**原因**: 聊天页面没有读取 URL 中的 `id` 查询参数
+**修复**: 在 `onMounted` 中读取 `route.query.id` 并自动选中对应会话
+
+### 9.5 聊天窗口消息过多时输入框被顶出可视区域
+
+**现象**: 消息很多时，输入框被推到页面底部，需要滚动才能看到
+**原因**: 聊天窗口的布局没有正确设置高度约束
+**修复**: 添加 `min-height: 0` 和 `flex-shrink: 0`，确保消息列表可滚动，输入框固定在底部
+
+### 9.6 发送方头像位置错误
+
+**现象**: 发送方（自己）的头像显示在消息气泡左侧
+**原因**: CSS 使用 `flex-direction: row-reverse` 导致头像位置反转
+**修复**: 改用 `justify-content: flex-end`，保持头像在右侧
+
+### 9.7 WebSocket 实时消息不显示在聊天窗口
+
+**现象**: 收到新消息时，会话列表更新了，但聊天窗口没有显示新消息
+**原因**: WebSocket 消息处理只刷新了会话列表，没有将新消息添加到当前聊天窗口
+**修复**:
+- ChatWindow 组件暴露 `addMessage` 方法
+- 父组件收到 WebSocket 消息时，调用 `chatWindowRef.value.addMessage()` 添加到聊天窗口
+
+---
+
+## 上一次任务出现的问题
 
 ## 一、数据库与连接问题
 
