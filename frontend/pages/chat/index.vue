@@ -108,16 +108,24 @@ const connectWebSocket = () => {
   if (!token.value) return
 
   const wsUrl = `ws://localhost:8080/ws/chat?token=${token.value}`
+  console.log('Connecting WebSocket:', wsUrl)
   ws.value = new WebSocket(wsUrl)
 
+  ws.value.onopen = () => {
+    console.log('WebSocket connected')
+  }
+
   ws.value.onmessage = (event) => {
+    console.log('WebSocket message received:', event.data)
     try {
       const data = JSON.parse(event.data)
       if (data.type === 'new_message') {
+        console.log('New message for conversation:', data.data?.conversationId, 'Active:', activeConversationId.value)
         // 新消息到达，刷新会话列表
         fetchConversations()
         // 如果是当前会话的消息，添加到聊天窗口
         if (data.data && data.data.conversationId === activeConversationId.value && chatWindowRef.value) {
+          console.log('Adding message to chat window')
           chatWindowRef.value.addMessage(data.data)
         }
       }
@@ -126,7 +134,12 @@ const connectWebSocket = () => {
     }
   }
 
+  ws.value.onerror = (error) => {
+    console.error('WebSocket error:', error)
+  }
+
   ws.value.onclose = () => {
+    console.log('WebSocket closed, reconnecting in 3s...')
     // 断线重连
     setTimeout(connectWebSocket, 3000)
   }
