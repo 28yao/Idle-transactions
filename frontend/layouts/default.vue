@@ -76,10 +76,10 @@ const handleLogout = () => {
   navigateTo('/login')
 }
 
-onMounted(fetchUnreadCount)
-
-// 每分钟刷新未读数量
-setInterval(fetchUnreadCount, 60000)
+onMounted(() => {
+  fetchUnreadCount()
+  setInterval(fetchUnreadCount, 60000)
+})
 </script>
 
 <style scoped>

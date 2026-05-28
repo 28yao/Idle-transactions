@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     setUser(user: User) {
-      this.user = user
+      this.user = user ? JSON.parse(JSON.stringify(user)) : null
     },
 
     async login(email: string, password: string) {
