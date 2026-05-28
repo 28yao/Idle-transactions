@@ -6,16 +6,15 @@
 
     <div class="bubble-content">
       <!-- 出价/还价消息 -->
-      <div v-if="message.type === 3 || message.type === 4" class="offer-card">
+      <div v-if="message.type === 3" class="offer-card">
         <div class="offer-header">
-          <span class="offer-label">{{ message.type === 3 ? '出价' : '还价' }}</span>
+          <span class="offer-label">出价</span>
           <span class="offer-price">¥{{ message.priceOffer }}</span>
         </div>
         <div class="offer-body">{{ message.content }}</div>
         <div v-if="message.offerStatus === 0 && !isSelf" class="offer-actions">
           <el-button size="small" type="success" @click="$emit('accept-offer')">接受</el-button>
           <el-button size="small" type="danger" @click="$emit('reject-offer')">拒绝</el-button>
-          <el-button v-if="message.type === 3" size="small" type="warning" @click="$emit('counter-offer')">还价</el-button>
         </div>
         <div v-if="message.offerStatus === 1" class="offer-status accepted">已接受</div>
         <div v-if="message.offerStatus === 2" class="offer-status rejected">已拒绝</div>
@@ -41,7 +40,7 @@ defineProps({
   isSelf: { type: Boolean, default: false },
 })
 
-defineEmits(['accept-offer', 'reject-offer', 'counter-offer'])
+defineEmits(['accept-offer', 'reject-offer'])
 
 const formatTime = (time) => {
   if (!time) return ''

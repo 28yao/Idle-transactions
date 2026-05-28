@@ -28,7 +28,6 @@
         :is-self="msg.senderId === currentUserId"
         @accept-offer="handleAcceptReject(msg, 1)"
         @reject-offer="handleAcceptReject(msg, 2)"
-        @counter-offer="showCounterOfferDialog(msg)"
       />
     </div>
 
@@ -69,21 +68,6 @@
       </template>
     </el-dialog>
 
-    <!-- 还价弹窗 -->
-    <el-dialog v-model="showCounterOfferDialogVisible" title="还价" width="400px">
-      <el-form>
-        <el-form-item label="还价价格">
-          <el-input-number v-model="counterOfferPrice" :min="0" :precision="2" :step="10" />
-        </el-form-item>
-        <el-form-item label="留言">
-          <el-input v-model="counterOfferMessage" type="textarea" placeholder="说点什么..." />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="showCounterOfferDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="sendCounterOffer">发送还价</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -108,10 +92,6 @@ const messageListRef = ref(null)
 const showOfferDialog = ref(false)
 const offerPrice = ref(0)
 const offerMessage = ref('')
-const showCounterOfferDialogVisible = ref(false)
-const counterOfferPrice = ref(0)
-const counterOfferMessage = ref('')
-const counterOfferMessageId = ref(null)
 
 // 从 token 获取当前用户 ID
 const currentUserId = computed(() => {
@@ -191,34 +171,6 @@ const handleAcceptReject = (msg, action) => {
   }
   // 通知父组件调用 API
   emit('offer', msg.id, action)
-}
-
-const showCounterOfferDialog = (msg) => {
-  counterOfferMessageId.value = msg.id
-  counterOfferPrice.value = msg.priceOffer || 0
-  counterOfferMessage.value = ''
-  showCounterOfferDialogVisible.value = true
-}
-
-const sendCounterOffer = () => {
-  if (counterOfferPrice.value <= 0) return
-  const msg = counterOfferMessage.value.trim() || `我还价 ¥${counterOfferPrice.value}`
-  emit('send', msg, 4, counterOfferPrice.value)
-  messages.value.push({
-    id: Date.now(),
-    senderId: currentUserId.value,
-    senderNickname: '我',
-    content: msg,
-    type: 4,
-    priceOffer: counterOfferPrice.value,
-    offerStatus: 0,
-    createdAt: new Date().toISOString(),
-  })
-  showCounterOfferDialogVisible.value = false
-  counterOfferPrice.value = 0
-  counterOfferMessage.value = ''
-  counterOfferMessageId.value = null
-  nextTick(scrollToBottom)
 }
 
 const scrollToBottom = () => {
