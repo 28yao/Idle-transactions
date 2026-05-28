@@ -119,12 +119,14 @@ CREATE TABLE IF NOT EXISTS reviews (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     transaction_id BIGINT NOT NULL COMMENT '交易ID',
     reviewer_id BIGINT NOT NULL COMMENT '评价者ID',
+    target_id BIGINT NOT NULL COMMENT '被评价者ID',
     rating TINYINT NOT NULL COMMENT '评分：1-5星',
     content VARCHAR(500) DEFAULT NULL COMMENT '评价内容',
     tags VARCHAR(255) DEFAULT NULL COMMENT '标签（JSON数组）',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     UNIQUE KEY uk_transaction_reviewer (transaction_id, reviewer_id),
-    INDEX idx_reviewer_id (reviewer_id)
+    INDEX idx_reviewer_id (reviewer_id),
+    INDEX idx_target_id (target_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='评价表';
 
 -- 通知表
