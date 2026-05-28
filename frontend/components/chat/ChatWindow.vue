@@ -26,8 +26,8 @@
         :key="msg.id"
         :message="msg"
         :is-self="msg.senderId === currentUserId"
-        @accept-offer="$emit('offer', msg.id, 1)"
-        @reject-offer="$emit('offer', msg.id, 2)"
+        @accept-offer="handleAcceptReject(msg, 1)"
+        @reject-offer="handleAcceptReject(msg, 2)"
         @counter-offer="showCounterOfferDialog(msg)"
       />
     </div>
@@ -96,7 +96,7 @@ const props = defineProps({
   conversation: { type: Object, default: null },
 })
 
-const emit = defineEmits(['send', 'offer'])
+const emit = defineEmits(['send', 'offer', 'offer-action'])
 
 const { $api } = useNuxtApp()
 const router = useRouter()
@@ -182,6 +182,17 @@ const goProduct = () => {
   }
 }
 
+const handleAcceptReject = (msg, action) => {
+  // 乐观更新：立即修改本地消息状态
+  const index = messages.value.findIndex(m => m.id === msg.id)
+  if (index !== -1) {
+    const updated = { ...messages.value[index], offerStatus: action }
+    messages.value.splice(index, 1, updated)
+  }
+  // 通知父组件调用 API
+  emit('offer', msg.id, action)
+}
+
 const showCounterOfferDialog = (msg) => {
   counterOfferMessageId.value = msg.id
   counterOfferPrice.value = msg.priceOffer || 0
@@ -229,7 +240,8 @@ const addMessage = (msg) => {
 const updateMessage = (msg) => {
   const index = messages.value.findIndex(m => m.id === msg.id)
   if (index !== -1) {
-    messages.value[index] = { ...messages.value[index], ...msg }
+    const updated = { ...messages.value[index], ...msg }
+    messages.value.splice(index, 1, updated)
   }
 }
 
